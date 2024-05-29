@@ -10,7 +10,7 @@ import { errorAtom, emailSentAtom } from "../utils/store";
 import { useNavigate } from "react-router-dom";
 
 const ForgotPasswordPage = () => {
-  const { requestPasswordReset, verifyResetCode, loading } =
+  const { requestPasswordReset, verifyResetCode, loading, emailSent } =
     useForgotPassword();
   const {
     register,
@@ -19,7 +19,7 @@ const ForgotPasswordPage = () => {
     formState: { errors },
   } = useForm({ mode: "all" });
   const [error, setError] = useAtom(errorAtom);
-  const [isEmailSent] = useAtom(emailSentAtom);
+  const [isEmailSent, setEmailSent] = useAtom(emailSentAtom);
   const navigate = useNavigate();
 
   /**

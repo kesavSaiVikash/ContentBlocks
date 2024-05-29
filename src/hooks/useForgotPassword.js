@@ -9,7 +9,7 @@ const useForgotPassword = () => {
   const { signIn } = useSignIn();
   const { signOut } = useClerk();
   const [loading, setLoading] = useAtom(loadingAtom);
-  const [setError] = useAtom(errorAtom);
+  const [error, setError] = useAtom(errorAtom);
   const [emailSent, setEmailSent] = useAtom(emailSentAtom);
 
   /**
