@@ -12,8 +12,8 @@ const useLogin = () => {
   const { isLoaded: isSignInLoaded, signIn, setActive } = useSignIn();
   const { isLoaded: isSessionLoaded, session } = useSession();
   const { isLoaded: isUserLoaded, user } = useUser();
-  const [setStoredSession] = useAtom(sessionAtom);
-  const [setStoredUser] = useAtom(userAtom);
+  const [storedSession, setStoredSession] = useAtom(sessionAtom);
+  const [storedUser, setStoredUser] = useAtom(userAtom);
   const [loading, setLoading] = useAtom(loadingAtom);
   const [error, setError] = useAtom(errorAtom);
   const navigate = useNavigate();
