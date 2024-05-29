@@ -21,13 +21,20 @@ const Login = () => {
     formState: { errors },
   } = useForm({ mode: "all" });
 
+  /**
+   * Redirects to the home page if the session is already active.
+   */
+  React.useEffect(() => {
+    if (session) {
+      navigate("/");
+    }
+  }, [session, navigate]);
+
   if (!isSignInLoaded || !isSessionLoaded || !isUserLoaded) {
     return <Loading />;
   }
 
-  return session ? (
-    <Loading />
-  ) : (
+  return (
     <AuthLayout>
       {error && <ErrorPopup message={error} onClose={() => setError(null)} />}
       <h2 className="text-2xl font-bold mb-8 text-center">Welcome Back!</h2>

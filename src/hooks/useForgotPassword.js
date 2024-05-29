@@ -1,15 +1,21 @@
-import { useSignIn } from "@clerk/clerk-react";
-import { useNavigate } from "react-router-dom";
+import { useSignIn, useClerk } from "@clerk/clerk-react";
 import { useAtom } from "jotai";
 import { errorAtom, loadingAtom, emailSentAtom } from "../utils/store";
 
+/**
+ * Custom hook for handling forgot password functionality.
+ */
 const useForgotPassword = () => {
   const { signIn } = useSignIn();
-  const navigate = useNavigate();
+  const { signOut } = useClerk();
   const [loading, setLoading] = useAtom(loadingAtom);
-  const [error, setError] = useAtom(errorAtom);
+  const [setError] = useAtom(errorAtom);
   const [emailSent, setEmailSent] = useAtom(emailSentAtom);
 
+  /**
+   * Initiates a password reset request by sending a reset password email.
+   * @param {string} email - The email address of the user requesting the reset.
+   */
   const requestPasswordReset = async (email) => {
     setLoading(true);
     setError(null);
@@ -20,16 +26,20 @@ const useForgotPassword = () => {
       });
       setEmailSent(true);
     } catch (err) {
-      console.error(
-        "Error sending reset password email:",
-        err.errors[0]?.longMessage
-      );
-      setError(err.errors[0]?.longMessage);
+      const errorMessage =
+        err?.errors?.[0]?.longMessage || "An unknown error occurred.";
+      console.error("Error sending reset password email:", errorMessage);
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
+  /**
+   * Verifies the reset code and updates the user's password.
+   * @param {string} code - The reset code sent to the user's email.
+   * @param {string} password - The new password to set for the user.
+   */
   const verifyResetCode = async (code, password) => {
     setLoading(true);
     setError(null);
@@ -41,11 +51,13 @@ const useForgotPassword = () => {
       });
       if (result.status === "complete") {
         setEmailSent(false); // Reset the emailSent state after successful reset
-        navigate("/login");
+        await signOut(); // Sign out the user to end the session
       }
     } catch (err) {
-      console.error("Error verifying reset code:", err.errors[0]?.longMessage);
-      setError(err.errors[0]?.longMessage);
+      const errorMessage =
+        err?.errors?.[0]?.longMessage || "An unknown error occurred.";
+      console.error("Error verifying reset code:", errorMessage);
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
