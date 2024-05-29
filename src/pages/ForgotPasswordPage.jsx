@@ -7,9 +7,10 @@ import Loading from "../components/Loading";
 import ErrorPopup from "../components/ErrorPopup";
 import { useAtom } from "jotai";
 import { errorAtom, emailSentAtom } from "../utils/store";
+import { useNavigate } from "react-router-dom";
 
 const ForgotPasswordPage = () => {
-  const { requestPasswordReset, verifyResetCode, loading, emailSent } =
+  const { requestPasswordReset, verifyResetCode, loading } =
     useForgotPassword();
   const {
     register,
@@ -18,8 +19,13 @@ const ForgotPasswordPage = () => {
     formState: { errors },
   } = useForm({ mode: "all" });
   const [error, setError] = useAtom(errorAtom);
-  const [isEmailSent, setEmailSent] = useAtom(emailSentAtom);
+  const [isEmailSent] = useAtom(emailSentAtom);
+  const navigate = useNavigate();
 
+  /**
+   * Handles form submission for password reset.
+   * @param {Object} data - The form data containing email, code, and password.
+   */
   const onSubmit = async (data) => {
     reset();
     if (!isEmailSent) {
@@ -81,7 +87,7 @@ const ForgotPasswordPage = () => {
                   id="password"
                   name="password"
                   type="password"
-                  placeholder="Password"
+                  placeholder="New Password"
                   className="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
                   {...register("password", {
                     required: "Password is required.",
@@ -116,6 +122,34 @@ const ForgotPasswordPage = () => {
               </button>
             </>
           )}
+          <div className="text-md px-12 text-center mt-4 font-medium">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+              role="img"
+              className="inline-block mr-2 iconify iconify--ph"
+              width="1em"
+              height="1em"
+              viewBox="0 0 256 256"
+            >
+              <g fill="currentColor">
+                <path
+                  d="M200 128a72 72 0 1 1-72-72a72 72 0 0 1 72 72"
+                  opacity=".2"
+                />
+                <path d="M214.86 180.12a8 8 0 0 1-11 2.74L136 142.13V216a8 8 0 0 1-16 0v-73.87l-67.88 40.73a8 8 0 1 1-8.23-13.72L112.45 128L43.89 86.86a8 8 0 1 1 8.23-13.72L120 113.87V40a8 8 0 0 1 16 0v73.87l67.88-40.73a8 8 0 1 1 8.23 13.72L143.55 128l68.56 41.14a8 8 0 0 1 2.75 10.98" />
+              </g>
+            </svg>
+            <span className="font-bold">
+              Create Mini Courses, Bridges Pages & much more.
+            </span>{" "}
+            <button
+              onClick={() => navigate("/login")}
+              className="font-bold text-indigo-500 hover:underline"
+            >
+              Remember Password? Login here.
+            </button>
+          </div>
         </form>
       </div>
     </AuthLayout>

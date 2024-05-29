@@ -14,20 +14,25 @@ const Home = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isSessionLoaded && session) {
+    if (!isSessionLoaded || !isUserLoaded) return;
+
+    if (session && user) {
       setStoredSession(session);
+      setStoredUser(user);
     } else {
       navigate("/login");
     }
-  }, [isSessionLoaded, session, setStoredSession, navigate]);
+  }, [
+    isSessionLoaded,
+    isUserLoaded,
+    session,
+    user,
+    setStoredSession,
+    setStoredUser,
+    navigate,
+  ]);
 
-  useEffect(() => {
-    if (isUserLoaded && user) {
-      setStoredUser(user);
-    }
-  }, [isUserLoaded, user, setStoredUser]);
-
-  if (!isSessionLoaded || !isUserLoaded || !storedSession || !storedUser) {
+  if (!storedSession || !storedUser) {
     return <Loading />;
   }
 
@@ -41,15 +46,12 @@ const Home = () => {
               Welcome back, {storedUser.username}
             </h1>
             <p className="text-lg text-gray-700">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-              sagittis, velit eu pharetra mollis, lorem velit tincidunt dui,
-              eget ullamcorper nisl ante non orci. Proin sed scelerisque elit.
-              Curabitur a nisi aliquet, tincidunt sapien eget, malesuada ligula.
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit...
             </p>
             <div className="mt-12">
               <button
                 className="bg-purple-600 hover:bg-purple-700 text-white py-3 px-8 rounded-md font-semibold"
-                onClick={() => navigate("https://contentblocks.com/")}
+                onClick={() => navigate("/https://app.contentblocks.com/")}
               >
                 Get Started
               </button>
