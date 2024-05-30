@@ -1,26 +1,19 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import useRegister from "../hooks/useRegister";
-import AuthLayout from "../components/AuthLayout";
-import ErrorMessage from "../components/ErrorMessage";
-import ErrorPopup from "../components/ErrorPopup";
-import Loading from "../components/Loading";
-import { useAtom } from "jotai";
-import {
-  errorAtom,
-  loadingAtom,
-  pendingVerificationAtom,
-} from "../utils/store";
-import { useNavigate } from "react-router-dom";
+import { useRegister } from "../hooks";
+import { AuthLayout, ErrorMessage, ErrorPopup, Loading } from "../components";
 
 const RegisterPage = () => {
   // Custom hook for registration logic
-  const { registerUser, verifyEmail, setError } = useRegister();
-  // Atoms for managing application state
-  const [loading] = useAtom(loadingAtom);
-  const [error] = useAtom(errorAtom);
-  const [pendingVerification] = useAtom(pendingVerificationAtom);
-  const navigate = useNavigate();
+  const {
+    registerUser,
+    verifyEmail,
+    loading,
+    error,
+    pendingVerification,
+    setError,
+  } = useRegister();
+
   // useForm hook for form handling
   const {
     register,
@@ -32,6 +25,7 @@ const RegisterPage = () => {
   if (pendingVerification) {
     return (
       <AuthLayout>
+        {error && <ErrorPopup message={error} onClose={() => setError(null)} />}
         <h2 className="text-2xl font-bold mb-8 text-center">
           Verify your account
         </h2>
@@ -44,6 +38,7 @@ const RegisterPage = () => {
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
             placeholder="Enter Verification Code..."
           />
+          {console.log(errors)}
           {errors.code && <ErrorMessage message={errors.code.message} />}
           <button
             type="submit"
@@ -79,6 +74,12 @@ const RegisterPage = () => {
                 required: `${
                   field.charAt(0).toUpperCase() + field.slice(1)
                 } is required.`,
+                ...(field === "Email" && {
+                  pattern: {
+                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+                    message: "Enter a valid email address.",
+                  },
+                }),
               })}
             />
             {errors[field] && <ErrorMessage message={errors[field].message} />}
@@ -95,12 +96,12 @@ const RegisterPage = () => {
           <span className="font-bold">
             Create Mini Courses, Bridges Pages &amp; much more.
           </span>
-          <button
-            onClick={() => navigate("/login")}
+          <a
+            href="/login"
             className="ml-2 font-bold text-indigo-500 hover:underline"
           >
             Already a member? Login here.
-          </button>
+          </a>
         </div>
       </form>
     </AuthLayout>
