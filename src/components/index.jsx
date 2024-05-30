@@ -6,3 +6,5 @@ export { default as ErrorPopup } from "./ErrorPopup";
 export { default as Loading } from "./Loading";
 export { default as Navbar } from "./Navbar";
 export { default as Modal } from "./Modal";
+export { default as FormInput } from "./FormInput";
+export { default as FormButton } from "./FormButton";

@@ -1,12 +1,12 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useForgotPassword, useLogout } from "../hooks";
+import { useForgotPassword, useLogout } from "../custom_hooks";
 import {
   AuthLayout,
-  ErrorMessage,
-  Loading,
   ErrorPopup,
   Modal,
+  FormInput,
+  FormButton,
 } from "../components";
 
 const ForgotPasswordPage = () => {
@@ -15,32 +15,26 @@ const ForgotPasswordPage = () => {
     verifyResetCode,
     loading,
     emailSent,
-    setEmailSent,
     error,
     setError,
     modal,
-    setModal,
-  } = useForgotPassword();
-
-  const { handleLogout } = useLogout();
+  } = useForgotPassword(); // Custom hook for handling password reset functionality
+  const { handleLogout } = useLogout(); // Custom hook for handling user logout functionality
 
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({ mode: "all" });
-
-  //  Handles form submission for password reset.
-  //  @param {Object} data - The form data containing email, code, and password.
+  } = useForm({ mode: "all" }); // React Hook Form for form handling
 
   const onSubmit = async (data) => {
-    reset();
+    reset(); // Reset form after submission
     if (!emailSent) {
-      await requestPasswordReset(data.email);
+      await requestPasswordReset(data.email); // Request password reset if email is not sent
     } else {
       try {
-        await verifyResetCode(data.code, data.password);
+        await verifyResetCode(data.code, data.password); // Verify reset code and update password
       } catch (err) {
         console.error("Password reset failed", err);
       }
@@ -51,18 +45,21 @@ const ForgotPasswordPage = () => {
     <AuthLayout>
       {modal && (
         <Modal
-          message="Password reset successfull. Please log in with your new password."
+          message="Password reset successful. Please log in with your new password."
           onConfirm={handleLogout}
           onClose={handleLogout}
           confirmText="Login Back"
           title="Password Reset"
         />
       )}
+
+      {error && <ErrorPopup message={error} onClose={() => setError(null)} />}
+
       <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-bold mb-8 text-center">
           Forgot Password?
         </h2>
-        {error && <ErrorPopup message={error} onClose={() => setError(null)} />}
+
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="space-y-6"
@@ -70,82 +67,38 @@ const ForgotPasswordPage = () => {
         >
           {!emailSent ? (
             <>
-              <div className="flex flex-col">
-                <label htmlFor="email" className="mb-2 font-semibold">
-                  Email Address
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="Email"
-                  className="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
-                  {...register("email", {
-                    required: "Email is required.",
-                    pattern: {
-                      value:
-                        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-                      message: "Enter a valid email address.",
-                    },
-                  })}
-                />
-                {errors.email && (
-                  <ErrorMessage message={errors.email.message} />
-                )}
-              </div>
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full py-3 bg-purple-600 text-white rounded-md font-semibold hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-600"
-              >
-                {loading ? <Loading /> : "Send Reset Code"}
-              </button>
+              <FormInput
+                id="email"
+                name="email"
+                type="email"
+                placeholder="Email Address"
+                register={register}
+                errors={errors}
+              />
+              <FormButton text="Send Reset Code" loading={loading} />
             </>
           ) : (
             <>
-              <div className="flex flex-col">
-                <label htmlFor="password" className="mb-2 font-semibold">
-                  New Password
-                </label>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="New Password"
-                  className="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
-                  {...register("password", {
-                    required: "Password is required.",
-                  })}
-                />
-                {errors.password && (
-                  <ErrorMessage message={errors.password.message} />
-                )}
-              </div>
-              <div className="flex flex-col">
-                <label htmlFor="code" className="mb-2 font-semibold">
-                  Password Reset Code
-                </label>
-                <input
-                  id="code"
-                  name="code"
-                  type="text"
-                  placeholder="Verification Code"
-                  className="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
-                  {...register("code", {
-                    required: "Verification Code is required.",
-                  })}
-                />
-                {errors.code && <ErrorMessage message={errors.code.message} />}
-              </div>
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full py-3 bg-purple-600 text-white rounded-md font-semibold hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-600"
-              >
-                {loading ? <Loading /> : "Reset Password"}
-              </button>
+              <FormInput
+                id="password"
+                name="password"
+                type="password"
+                placeholder="New Password"
+                register={register}
+                errors={errors}
+              />
+              <FormInput
+                id="code"
+                name="code"
+                type="text"
+                placeholder="Password Reset Code"
+                register={register}
+                errors={errors}
+              />
+              <FormButton text="Reset Password" loading={loading} />
             </>
           )}
+
           <div className="text-md px-12 text-center mt-4 font-medium">
             <svg
               xmlns="http://www.w3.org/2000/svg"

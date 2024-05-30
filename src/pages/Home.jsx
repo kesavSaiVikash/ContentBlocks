@@ -6,12 +6,13 @@ import { useAtom } from "jotai";
 import { sessionAtom, userAtom } from "../utils/store";
 
 const Home = () => {
+  const navigate = useNavigate();
   const { isLoaded: isSessionLoaded, session } = useSession();
   const { isLoaded: isUserLoaded, user } = useUser();
   const [storedSession, setStoredSession] = useAtom(sessionAtom);
   const [storedUser, setStoredUser] = useAtom(userAtom);
-  const navigate = useNavigate();
 
+  // Check if session and user are loaded, and set storedSession and storedUser
   useEffect(() => {
     if (!isSessionLoaded || !isUserLoaded) return;
 
@@ -23,6 +24,7 @@ const Home = () => {
     }
   }, [session, user]);
 
+  // Show loading indicator until storedSession and storedUser are set
   if (!storedSession || !storedUser) {
     return <Loading />;
   }
