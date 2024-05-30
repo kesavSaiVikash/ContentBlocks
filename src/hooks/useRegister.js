@@ -1,16 +1,16 @@
 import { useSignUp } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
+import { isClerkAPIResponseError } from "@clerk/clerk-react/errors";
 import {
   loadingAtom,
   errorAtom,
   pendingVerificationAtom,
 } from "../utils/store";
-import { isClerkAPIResponseError } from "@clerk/clerk-react/errors";
 
-/**
- * Custom hook for handling user registration and email verification.
- */
+// Custom hook for handling user registration and email verification.
+// We will be using jotai state management package throught out this app.
+
 const useRegister = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
   const navigate = useNavigate();
@@ -20,10 +20,9 @@ const useRegister = () => {
     pendingVerificationAtom
   );
 
-  /**
-   * Registers a new user and prepares email address verification.
-   * @param {Object} data - The registration data containing username, email, and password.
-   */
+  //  Registers a new user and prepares email address verification.
+  //  @param {Object} data - The registration data containing username, email, and password.
+
   const registerUser = async (data) => {
     if (!isLoaded || loading) return;
     setLoading(true);
@@ -40,16 +39,16 @@ const useRegister = () => {
       const errorMessage = isClerkAPIResponseError(err)
         ? err.errors[0].longMessage
         : "An error occurred. Please try again later.";
+      console.log(err.errors[0].longMessage);
       setError(errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
-  /**
-   * Verifies the email address using the provided verification code.
-   * @param {Object} data - The verification data containing the code.
-   */
+  //  Verifies the email address using the provided verification code.
+  //  @param {Object} data - The verification data containing the code.
+
   const verifyEmail = async (data) => {
     if (!isLoaded || loading) return;
     setLoading(true);
@@ -72,13 +71,14 @@ const useRegister = () => {
     }
   };
 
+  // All the below returned variables and functions are imported & used on Register page.
   return {
-    registerUser,
-    verifyEmail,
-    loading,
-    error,
-    pendingVerification,
-    setError,
+    registerUser, // function to register the using taking the params - username, email, password and triggers a verification code email.
+    verifyEmail, // function to verify the verification code thats triggered by registerUser.
+    loading, // global loading atom state
+    error, // global error atom state
+    pendingVerification, // global pending verification atom state
+    setError, // function to set global error atom state.
   };
 };
 

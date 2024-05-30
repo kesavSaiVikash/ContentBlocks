@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
-import Navbar from "../components/Navbar";
-import Loading from "../components/Loading";
+import { Navbar, Loading } from "../components";
 import { useSession, useUser } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
@@ -22,15 +21,7 @@ const Home = () => {
     } else {
       navigate("/login");
     }
-  }, [
-    isSessionLoaded,
-    isUserLoaded,
-    session,
-    user,
-    setStoredSession,
-    setStoredUser,
-    navigate,
-  ]);
+  }, [session, user]);
 
   if (!storedSession || !storedUser) {
     return <Loading />;
@@ -49,12 +40,14 @@ const Home = () => {
               Lorem ipsum dolor sit amet, consectetur adipiscing elit...
             </p>
             <div className="mt-12">
-              <button
+              <a
                 className="bg-purple-600 hover:bg-purple-700 text-white py-3 px-8 rounded-md font-semibold"
-                onClick={() => navigate("/https://app.contentblocks.com/")}
+                href="https://app.contentblocks.com/"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 Get Started
-              </button>
+              </a>
             </div>
           </div>
         </div>

@@ -1,34 +1,25 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import useLogin from "../hooks/useLogin";
-import ErrorMessage from "../components/ErrorMessage";
-import Loading from "../components/Loading";
-import AuthLayout from "../components/AuthLayout";
-import ErrorPopup from "../components/ErrorPopup";
-import { useAtom } from "jotai";
-import { errorAtom, loadingAtom } from "../utils/store";
-import { useNavigate } from "react-router-dom";
+import { useLogin } from "../hooks";
+import { ErrorMessage, Loading, AuthLayout, ErrorPopup } from "../components";
 
 const Login = () => {
-  const { isSignInLoaded, isSessionLoaded, isUserLoaded, session, login } =
-    useLogin();
-  const [error, setError] = useAtom(errorAtom);
-  const [loading] = useAtom(loadingAtom);
-  const navigate = useNavigate();
+  const {
+    isSignInLoaded,
+    isSessionLoaded,
+    isUserLoaded,
+    session,
+    error,
+    setError,
+    loading,
+    login,
+  } = useLogin();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({ mode: "all" });
-
-  /**
-   * Redirects to the home page if the session is already active.
-   */
-  React.useEffect(() => {
-    if (session) {
-      navigate("/");
-    }
-  }, [session, navigate]);
 
   if (!isSignInLoaded || !isSessionLoaded || !isUserLoaded) {
     return <Loading />;
@@ -41,14 +32,16 @@ const Login = () => {
       <form className="space-y-6" onSubmit={handleSubmit(login)}>
         <div className="flex flex-col">
           <label htmlFor="email" className="mb-2 font-semibold">
-            Email Address
+            Username/ Email
           </label>
           <input
             id="email"
-            type="email"
-            placeholder="Email"
+            type="text"
+            placeholder="Username/ Email"
             className="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
-            {...register("email", { required: "Email is required." })}
+            {...register("email", {
+              required: "Username/ Email is required.",
+            })}
           />
           {errors.email && <ErrorMessage message={errors.email.message} />}
         </div>
@@ -90,13 +83,12 @@ const Login = () => {
         <div className="text-xl font-bold mb-4">
           Get Started with ContentBlocks
         </div>
-        <button
-          type="button"
-          className="w-full py-3 bg-purple-600 text-white rounded-md font-semibold hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-600"
-          onClick={() => navigate("/register")}
+        <a
+          className="block w-full py-4 bg-purple-600 text-white text-lg text-center rounded-md font-semibold hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-600"
+          href="/register"
         >
           Create Your Account
-        </button>
+        </a>
         <div className="text-md mt-4 text-gray-600">
           Your first workspace is free!
         </div>

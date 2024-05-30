@@ -1,5 +1,7 @@
 import React from "react";
 
+// This is a loading component where it can be used on pages as needed to show a nice styled loader.
+
 const Loading = () => {
   return (
     <div className="fixed top-0 left-0 w-full h-full flex flex-col items-center justify-center bg-gray-900 bg-opacity-75 z-50">

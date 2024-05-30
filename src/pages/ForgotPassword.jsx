@@ -1,34 +1,42 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import useForgotPassword from "../hooks/useForgotPassword";
-import AuthLayout from "../components/AuthLayout";
-import ErrorMessage from "../components/ErrorMessage";
-import Loading from "../components/Loading";
-import ErrorPopup from "../components/ErrorPopup";
-import { useAtom } from "jotai";
-import { errorAtom, emailSentAtom } from "../utils/store";
-import { useNavigate } from "react-router-dom";
+import { useForgotPassword, useLogout } from "../hooks";
+import {
+  AuthLayout,
+  ErrorMessage,
+  Loading,
+  ErrorPopup,
+  Modal,
+} from "../components";
 
 const ForgotPasswordPage = () => {
-  const { requestPasswordReset, verifyResetCode, loading, emailSent } =
-    useForgotPassword();
+  const {
+    requestPasswordReset,
+    verifyResetCode,
+    loading,
+    emailSent,
+    setEmailSent,
+    error,
+    setError,
+    modal,
+    setModal,
+  } = useForgotPassword();
+
+  const { handleLogout } = useLogout();
+
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm({ mode: "all" });
-  const [error, setError] = useAtom(errorAtom);
-  const [isEmailSent, setEmailSent] = useAtom(emailSentAtom);
-  const navigate = useNavigate();
 
-  /**
-   * Handles form submission for password reset.
-   * @param {Object} data - The form data containing email, code, and password.
-   */
+  //  Handles form submission for password reset.
+  //  @param {Object} data - The form data containing email, code, and password.
+
   const onSubmit = async (data) => {
     reset();
-    if (!isEmailSent) {
+    if (!emailSent) {
       await requestPasswordReset(data.email);
     } else {
       try {
@@ -41,6 +49,15 @@ const ForgotPasswordPage = () => {
 
   return (
     <AuthLayout>
+      {modal && (
+        <Modal
+          message="Password reset successfull. Please log in with your new password."
+          onConfirm={handleLogout}
+          onClose={handleLogout}
+          confirmText="Login Back"
+          title="Password Reset"
+        />
+      )}
       <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-bold mb-8 text-center">
           Forgot Password?
@@ -51,7 +68,7 @@ const ForgotPasswordPage = () => {
           className="space-y-6"
           autoComplete="off"
         >
-          {!isEmailSent ? (
+          {!emailSent ? (
             <>
               <div className="flex flex-col">
                 <label htmlFor="email" className="mb-2 font-semibold">
@@ -63,7 +80,14 @@ const ForgotPasswordPage = () => {
                   type="email"
                   placeholder="Email"
                   className="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
-                  {...register("email", { required: "Email is required." })}
+                  {...register("email", {
+                    required: "Email is required.",
+                    pattern: {
+                      value:
+                        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+                      message: "Enter a valid email address.",
+                    },
+                  })}
                 />
                 {errors.email && (
                   <ErrorMessage message={errors.email.message} />
@@ -143,12 +167,12 @@ const ForgotPasswordPage = () => {
             <span className="font-bold">
               Create Mini Courses, Bridges Pages & much more.
             </span>{" "}
-            <button
-              onClick={() => navigate("/login")}
+            <a
+              href="/login"
               className="font-bold text-indigo-500 hover:underline"
             >
               Remember Password? Login here.
-            </button>
+            </a>
           </div>
         </form>
       </div>
