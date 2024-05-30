@@ -1,70 +1,54 @@
-# Getting Started with Create React App
+### Setup Instructions :
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+1. Clone the repository :
 
-## Available Scripts
+- git clone https://github.com/kesavSaiVikash/ContentBlocks.git
+- cd ContentBlocks
 
-In the project directory, you can run:
+2. Install dependencies :
 
-### `npm start`
+- npm install
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+3. Set up clerk :
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Note: By following the below steps i have setup my clerk account, but i will be providing my clerk ContentBlocks application's secret credentials in .env.local which can be used for testing the app without any exceptional account setup work by yourself (\* so basically jump this step and can jump to step-4).
 
-### `npm test`
+- Sign up for a Clerk account at https://clerk.com/
+- Create a new Clerk application and configure it according to your needs.
+- Copy your Clerk API Key and Clerk Frontend API Key.
+- Create a .env.local file in the root of your project and add your Clerk API keys:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+4. Start development server :
 
-### `npm run build`
+- npm start
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+5. Open the app :
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- Open http://localhost:3000 to view the app in your browser.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Approach :
 
-### `npm run eject`
+1. Authentication :
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- Utilized the Clerk authentication service for handling user authentication.
+- Integrated the Clerk frontend SDK to manage user sessions and authentication flows.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+2. User Interface :
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- Designed a responsive and intuitive user interface using React components and Tailwind CSS.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+3. Data Management :
 
-## Learn More
+- Utilized Jotai for state management.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+4. Modularization
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- Organized the project into components, hooks, and utility functions for maintainability and reusability.
+- Separated concerns between components, focusing on single responsibility principles.
 
-### Code Splitting
+5. Error Handling
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- Implemented error handling for API requests and user inputs.
+- Displayed error messages to users for feedback and troubleshooting.
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+6. Future Improvements

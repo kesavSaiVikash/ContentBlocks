@@ -38,6 +38,7 @@ const Login = () => {
             id="email"
             type="text"
             placeholder="Username/ Email"
+            aria-label="Username or email"
             className="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
             {...register("email", {
               required: "Username/ Email is required.",
@@ -53,6 +54,7 @@ const Login = () => {
             id="password"
             type="password"
             placeholder="Password"
+            aria-label="Password"
             className="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
             {...register("password", { required: "Password is required." })}
           />

@@ -58,33 +58,38 @@ const RegisterPage = () => {
         Create Your Account
       </h2>
       <form onSubmit={handleSubmit(registerUser)} className="space-y-6">
-        {/* Input fields for registration */}
-        {["userName", "email", "password"].map((field) => (
-          <div key={field} className="flex flex-col">
-            <label htmlFor={field} className="mb-2 font-semibold">
-              {field.charAt(0).toUpperCase() +
-                field.slice(1).replace(/([A-Z])/g, " $1")}
-            </label>
-            <input
-              type={field === "password" ? "password" : "text"}
-              id={field}
-              placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-              className="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
-              {...register(field, {
-                required: `${
-                  field.charAt(0).toUpperCase() + field.slice(1)
-                } is required.`,
-                ...(field === "Email" && {
-                  pattern: {
-                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-                    message: "Enter a valid email address.",
-                  },
-                }),
-              })}
-            />
-            {errors[field] && <ErrorMessage message={errors[field].message} />}
-          </div>
-        ))}
+        {["userName", "email", "password"].map((field) => {
+          const fieldName = field.charAt(0).toUpperCase() + field.slice(1);
+          const isPasswordField = field === "password";
+          const placeholder = fieldName;
+
+          return (
+            <div key={field} className="flex flex-col">
+              <label htmlFor={field} className="mb-2 font-semibold">
+                {fieldName}
+              </label>
+              <input
+                type={isPasswordField ? "password" : "text"}
+                id={field}
+                placeholder={placeholder}
+                className="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
+                {...register(field, {
+                  required: `${fieldName} is required.`,
+                  ...(field === "email" && {
+                    pattern: {
+                      value:
+                        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
+                      message: "Enter a valid email address.",
+                    },
+                  }),
+                })}
+              />
+              {errors[field] && (
+                <ErrorMessage message={errors[field].message} />
+              )}
+            </div>
+          );
+        })}
         <button
           type="submit"
           className="w-full py-3 bg-purple-600 text-white rounded-md font-semibold hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-600"
@@ -92,7 +97,6 @@ const RegisterPage = () => {
           {loading ? <Loading /> : "Sign Up"}
         </button>
         <div className="text-md text-center mt-4 font-medium">
-          {/* Additional information and navigation */}
           <span className="font-bold">
             Create Mini Courses, Bridges Pages &amp; much more.
           </span>
