@@ -75,14 +75,12 @@ const ForgotPasswordPage = () => {
         />
       )}
 
-      <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-8 text-center">
-          Forgot Password?
-        </h2>
+      <div className="forgot-password-container">
+        <h2 className="forgot-password-title">Forgot Password?</h2>
 
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="space-y-6"
+          className="forgot-password-form"
           autoComplete="off"
         >
           {!currentUser.metadata.emailSent ? (
@@ -125,12 +123,12 @@ const ForgotPasswordPage = () => {
             </>
           )}
 
-          <div className="text-md px-12 text-center mt-4 font-medium">
+          <div className="forgot-password-footer">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               aria-hidden="true"
               role="img"
-              className="inline-block mr-2 iconify iconify--ph"
+              className="icon-style iconify iconify--ph"
               width="1em"
               height="1em"
               viewBox="0 0 256 256"
@@ -146,10 +144,7 @@ const ForgotPasswordPage = () => {
             <span className="font-bold">
               Create Mini Courses, Bridges Pages & much more.
             </span>
-            <a
-              href="/login"
-              className="font-bold text-indigo-500 hover:underline"
-            >
+            <a href="/login" className="link-style">
               {" "}
               Remember Password? Login here.
             </a>

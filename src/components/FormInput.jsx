@@ -1,5 +1,5 @@
 import React from "react";
-import { ErrorMessage } from "."; // Importing the ErrorMessage component
+import { ErrorMessage } from "../components"; 
 
 // A form input component with error handling
 const FormInput = ({
@@ -11,8 +11,8 @@ const FormInput = ({
   errors,
   message,
 }) => (
-  <div className="flex flex-col">
-    <label htmlFor={id} className="mb-2 font-semibold">
+  <div className="input-container">
+    <label htmlFor={id} className="input-label">
       {placeholder}
     </label>
     <input
@@ -20,7 +20,7 @@ const FormInput = ({
       name={name}
       type={type}
       placeholder={placeholder}
-      className="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
+      className="input-field"
       {...register(name, {
         required: `${placeholder} is required.`,
         ...(type === "email" && {

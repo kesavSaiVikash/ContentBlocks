@@ -18,18 +18,16 @@ const Home = () => {
     <>
       {currentUser.metadata.loading && <Loading />}
       <Navbar />
-      <div className="min-h-screen bg-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-900 mb-8">
-              Welcome back, {currentUser.username}
-            </h1>
-            <p className="text-lg text-gray-700">
+      <div className="home-container">
+        <div className="home-inner-container">
+          <div className="home-text-center">
+            <h1 className="home-title">Welcome back, {currentUser.username}</h1>
+            <p className="home-description">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit...
             </p>
-            <div className="mt-12">
+            <div className="home-button-container">
               <a
-                className="bg-purple-600 hover:bg-purple-700 text-white py-3 px-8 rounded-md font-semibold"
+                className="home-button"
                 href="https://app.contentblocks.com/"
                 target="_blank"
                 rel="noopener noreferrer"

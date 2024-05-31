@@ -1,3 +1,5 @@
+import "./index.css"
+
 //Exports for Pages
 
 export { default as ForgotPassword } from "./ForgotPassword";

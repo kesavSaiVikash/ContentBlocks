@@ -1,0 +1,90 @@
+/* Titles */
+.login-title,
+.register-title,
+.verify-title,
+.forgot-password-title {
+  @apply text-2xl font-bold mb-8 text-center;
+}
+
+.get-started-title {
+  @apply text-xl font-bold mb-4;
+}
+
+/* Forms */
+.login-form,
+.forgot-password-form {
+  @apply space-y-6;
+}
+
+.checkbox-input {
+  @apply mr-2 p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-600;
+}
+
+.checkbox-label {
+  @apply font-semibold;
+}
+
+/* Buttons */
+.get-started-button {
+  @apply block w-full py-4 bg-purple-600 text-white text-lg text-center rounded-md font-semibold hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-600;
+}
+
+.home-button {
+  @apply bg-purple-600 hover:bg-purple-700 text-white py-3 px-8 rounded-md font-semibold;
+}
+
+/* Links */
+.forgot-password-link,
+.link-style {
+  @apply font-bold text-indigo-500 hover:underline;
+}
+
+/* Dividers */
+.divider {
+  @apply flex items-center justify-center border-t-2 border-gray-500 mt-12;
+}
+
+.divider-text {
+  @apply bg-white py-3 px-6 -mt-6 font-bold text-gray-400;
+}
+
+/* Containers */
+.forgot-password-container {
+  @apply max-w-md mx-auto p-6 bg-white rounded-lg shadow-md;
+}
+
+/* Footer */
+.forgot-password-footer,
+.register-footer {
+  @apply text-base px-12 text-center mt-4 font-medium;
+}
+
+/* Icons */
+.icon-style {
+  @apply inline-block mr-2;
+}
+
+/* Home Page Specific */
+.home-container {
+  @apply min-h-screen bg-gray-100;
+}
+
+.home-inner-container {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20;
+}
+
+.home-text-center {
+  @apply text-center;
+}
+
+.home-title {
+  @apply text-4xl font-bold text-gray-900 mb-8;
+}
+
+.home-description {
+  @apply text-lg text-gray-700;
+}
+
+.home-button-container {
+  @apply mt-12;
+}

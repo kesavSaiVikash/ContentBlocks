@@ -1,0 +1,119 @@
+/* Your custom styles */
+.bg-auth {
+  @apply min-h-screen flex flex-col items-center justify-center bg-gray-100 bg-cover bg-center;
+}
+
+.container {
+  @apply bg-white p-8 border-2 border-black rounded-md max-w-lg mx-auto shadow-lg;
+}
+
+.footer {
+  @apply max-w-lg mx-auto p-8 mt-2 text-center;
+}
+
+.footer-text {
+  @apply font-bold text-sm text-white;
+  text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.1);
+}
+
+/* Error Message Styles */
+.error-container {
+  @apply border border-red-500 bg-red-100 text-red-900 px-4 py-3 rounded relative;
+}
+
+.error-message {
+  @apply font-bold block sm:inline;
+}
+
+/* Popup Styles */
+.overlay,
+.modal-overlay {
+  @apply fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50;
+}
+
+.popup,
+.modal-container {
+  @apply bg-white max-w-md w-full mx-4 rounded-md shadow-lg;
+}
+
+.popup-header,
+.modal-header {
+  @apply flex justify-between items-center border-b border-gray-200 px-6 py-4;
+}
+
+.popup-title,
+.modal-title {
+  @apply text-lg font-semibold text-gray-800;
+}
+
+.close-button,
+.modal-close-button {
+  @apply text-gray-400 hover:text-gray-800 focus:outline-none;
+}
+
+.close-icon {
+  @apply h-5 w-5;
+}
+
+.popup-message,
+.modal-message {
+  @apply px-6 py-4 text-xl text-center mt-4 text-gray-600;
+}
+
+.popup-footer,
+.modal-footer {
+  @apply flex justify-end px-6 py-4;
+}
+
+.close-button-footer,
+.modal-confirm-button {
+  @apply w-full py-3 bg-purple-600 text-white rounded-md font-semibold hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-600;
+}
+
+/* Form Button Styles */
+.form-button {
+  @apply w-full py-3 bg-purple-600 text-white rounded-md font-semibold hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-600;
+}
+
+/* Form Input Styles */
+.input-container {
+  @apply flex flex-col;
+}
+
+.input-label {
+  @apply mb-2 font-semibold;
+}
+
+.input-field {
+  @apply p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600;
+}
+
+/* Loading Styles */
+.loading-overlay {
+  @apply fixed top-0 left-0 w-full h-full flex flex-col items-center justify-center bg-gray-900 bg-opacity-75 z-50;
+}
+
+.loading-spinner {
+  @apply animate-spin rounded-full h-32 w-32 border-4 border-purple-500 mb-4;
+}
+
+.loading-text {
+  @apply text-white text-lg font-semibold;
+}
+
+/* Navbar Styles */
+.navbar {
+  @apply bg-gray-800 p-4;
+}
+
+.navbar-content {
+  @apply flex items-center justify-between;
+}
+
+.navbar-logo {
+  @apply text-white;
+}
+
+.navbar-button {
+  @apply bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-md font-semibold focus:outline-none focus:ring-2 focus:ring-purple-600;
+}
