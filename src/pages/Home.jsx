@@ -1,18 +1,10 @@
-import React, { useEffect } from "react";
-import { Navbar, Loading } from "../components";
-import { useNavigate } from "react-router-dom";
+import React from "react";
 import { useAtom } from "jotai";
+import { Navbar, Loading } from "../components";
 import { currentUserAtom } from "../utils/store";
 
 const Home = () => {
-  const navigate = useNavigate();
-  const [currentUser] = useAtom(currentUserAtom);
-
-  useEffect(() => {
-    if (!currentUser.session) {
-      navigate("/login");
-    }
-  }, [currentUser, navigate]);
+  const [currentUser] = useAtom(currentUserAtom); // Using Jotai to access current user state
 
   return (
     <>

@@ -1,3 +1,8 @@
+/* Global custom tailwind styles file for all of our PAGES only. */
+
+/* @apply directive is used to apply existing utility classes to a custom CSS class. 
+This allowed me to create reusable styles by combining Tailwind utility classes. */
+
 /* Titles */
 .login-title,
 .register-title,

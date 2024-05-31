@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useSignIn, useSession, useUser } from "@clerk/clerk-react";
 import { isClerkAPIResponseError } from "@clerk/clerk-react/errors";
 import { currentUserAtom } from "../utils/store";
-// Import bcrypt for password hashing simulation
+
+// Import bcrypt for password hashing simulation.
 // import bcrypt from "bcryptjs";
 
 const useLogin = () => {
@@ -14,13 +15,13 @@ const useLogin = () => {
   const { isLoaded: isUserLoaded, user } = useUser();
   const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
 
-  // Effect to handle redirection and updating currentUser on session and user load
+  // useEffect to handle redirection and updating currentUser on session and user load.
   useEffect(() => {
     setCurrentUser((prevState) => ({
       ...prevState,
       metadata: {
         ...prevState.metadata,
-        strategy: "email_code",
+        strategy: process.env.REACT_APP_STRATEGY_EMAIL_CODE,
       },
     }));
 
@@ -36,13 +37,16 @@ const useLogin = () => {
     }
   }, [isSessionLoaded, session, isUserLoaded, user, navigate, setCurrentUser]);
 
-  // Handle sign-in process after creating the sign-in attempt
+  // Handle sign-in process after creating the sign-in attempt.
   const handleSignIn = async (completeSignIn) => {
     if (
       completeSignIn.status === "needs_first_factor" ||
       completeSignIn.status === "complete"
     ) {
-      if (currentUser.metadata.strategy === "email_link") {
+      if (
+        currentUser.metadata.strategy ===
+        process.env.REACT_APP_STRATEGY_EMAIL_LINK
+      ) {
         setCurrentUser((prevState) => ({
           ...prevState,
           metadata: {
@@ -54,7 +58,7 @@ const useLogin = () => {
 
       await setActive({ session: completeSignIn.createdSessionId });
 
-      // Wait for user to be loaded before updating stored session and user
+      // Wait for user to be loaded before updating stored session and user.
       while (!isUserLoaded) {
         await new Promise((resolve) => setTimeout(resolve, 100));
       }
@@ -72,7 +76,8 @@ const useLogin = () => {
     }
   };
 
-  // Simulate password hashing using bcryptjs
+  // Demonstrating the process of how to perform password hashing using bcryptjs.
+
   // const simulatePasswordHashing = (password) => {
   //   const salt = bcrypt.genSaltSync(10);
   //   return bcrypt.hashSync(password, salt);
@@ -94,17 +99,19 @@ const useLogin = () => {
 
       let completeSignIn;
       switch (currentUser.metadata.strategy) {
-        case "email_link":
+        case process.env.REACT_APP_STRATEGY_EMAIL_LINK:
           completeSignIn = await signIn.create({
             identifier: data.email,
             redirectUrl: process.env.REACT_APP_REDIRECT_URL,
-            strategy: "email_link",
+            strategy: process.env.REACT_APP_STRATEGY_EMAIL_LINK,
           });
           break;
 
         default:
-          // Simulate password hashing before sending to Clerk
+          // Simulate password hashing before sending to Clerk.
+
           // const hashedPassword = simulatePasswordHashing(data.password);
+          // Now we pass this hashed password in the password field of sign in function in our custom server.
 
           completeSignIn = await signIn.create({
             identifier: data.email,

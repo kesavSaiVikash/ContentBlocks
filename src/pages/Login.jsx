@@ -8,18 +8,18 @@ import {
   FormInput,
   FormButton,
   Modal,
-} from "../components";
+} from "../components"; // Importing components for the login page
 
 const Login = () => {
-  const { login, setCurrentUser, currentUser } = useLogin();
+  const { login, setCurrentUser, currentUser } = useLogin(); // Using custom hook for login functionality
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ mode: "all" });
+  } = useForm({ mode: "all" }); // Setting up form with react-hook-form
 
-  // Show loading indicator until sign-in, session, and user data are loaded
+  // If currentUser is not loaded yet, show loading indicator
   if (!currentUser) {
     return <Loading />;
   }
@@ -27,17 +27,19 @@ const Login = () => {
   return (
     <AuthLayout>
       {currentUser.metadata.modal && (
+        // Show modal if modal flag is set in currentUser metadata
         <Modal
           message="Email with a magic link has been sent to your email."
           confirmText="Close"
           title="Magic Link Success"
           onClose={() => {
+            // Close modal and update currentUser metadata
             setCurrentUser((prevState) => ({
               ...prevState,
               metadata: {
                 ...prevState.metadata,
                 modal: false,
-                strategy: "email_code",
+                strategy: process.env.REACT_APP_STRATEGY_EMAIL_CODE,
               },
             }));
           }}
@@ -45,6 +47,7 @@ const Login = () => {
       )}
 
       {currentUser.metadata.error && (
+        // Show error popup if error flag is set in currentUser metadata
         <ErrorPopup
           message={currentUser.metadata.error}
           onClose={() =>
@@ -62,21 +65,28 @@ const Login = () => {
       <h2 className="login-title">Welcome Back!</h2>
 
       <form className="login-form" onSubmit={handleSubmit(login)}>
+        {/* Form input for email or username */}
         <FormInput
           id="email"
           name="email"
           type={
-            currentUser.metadata.strategy === "email_link" ? "email" : "text"
+            currentUser.metadata.strategy ===
+            process.env.REACT_APP_STRATEGY_EMAIL_LINK
+              ? "email"
+              : "text"
           }
           placeholder={
-            currentUser.metadata.strategy === "email_link"
+            currentUser.metadata.strategy ===
+            process.env.REACT_APP_STRATEGY_EMAIL_LINK
               ? "Email"
               : "Username/ Email"
           }
           register={register}
           errors={errors}
         />
-        {currentUser.metadata.strategy === "email_code" && (
+        {/* Form input for password, shown only if using email code strategy */}
+        {currentUser.metadata.strategy ===
+          process.env.REACT_APP_STRATEGY_EMAIL_CODE && (
           <FormInput
             id="password"
             name="password"
@@ -86,13 +96,17 @@ const Login = () => {
             errors={errors}
           />
         )}
+        {/* Checkbox for selecting magic link method */}
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <input
               id="checkbox"
               name="checkbox"
               type="checkbox"
-              checked={currentUser.metadata.strategy === "email_link"}
+              checked={
+                currentUser.metadata.strategy ===
+                process.env.REACT_APP_STRATEGY_EMAIL_LINK
+              }
               className="checkbox-input"
               {...register("checkbox")}
               onChange={(e) =>
@@ -100,7 +114,9 @@ const Login = () => {
                   ...prevState,
                   metadata: {
                     ...prevState.metadata,
-                    strategy: e.target.checked ? "email_link" : "email_code",
+                    strategy: e.target.checked
+                      ? process.env.REACT_APP_STRATEGY_EMAIL_LINK
+                      : process.env.REACT_APP_STRATEGY_EMAIL_CODE,
                   },
                 }))
               }
@@ -116,17 +132,21 @@ const Login = () => {
           </div>
         </div>
 
+        {/* Login button */}
         <FormButton text="Login" loading={currentUser.metadata.loading} />
       </form>
 
+      {/* Divider */}
       <div className="divider">
         <h2 className="divider-text">OR</h2>
       </div>
       <div className="mt-4 text-center">
+        {/* Get started section */}
         <div className="get-started-title">Get Started with ContentBlocks</div>
         <a className="get-started-button" href="/register">
           Create Your Account
         </a>
+        <br />
         <div className="free-workspace-text">Your first workspace is free!</div>
       </div>
     </AuthLayout>

@@ -1,31 +1,30 @@
 import React from "react";
+import { useAtom } from "jotai";
 import { useForm } from "react-hook-form";
 import { useRegister } from "../custom_hooks";
 import { useNavigate } from "react-router-dom";
 import { currentUserAtom } from "../utils/store";
-import { useAtom } from "jotai";
+import { ReactComponent as Astrix } from "../assets/astrix.svg";
 import {
   AuthLayout,
   ErrorPopup,
   FormButton,
   FormInput,
   Modal,
-} from "../components";
+} from "../components"; // Importing components for the registration page
 
 const RegisterPage = () => {
   const navigate = useNavigate();
-  const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
+  const [currentUser, setCurrentUser] = useAtom(currentUserAtom); // Using Jotai for current user state
 
-  // Custom hook to handle user registration
   const { registerUser, verifyEmail } = useRegister();
 
-  // Form handling using react-hook-form
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({ mode: "all" });
+  } = useForm({ mode: "all" }); // Setting up form with react-hook-form
 
   // Close modal and navigate to home page
   const handleCloseModal = () => {
@@ -45,6 +44,7 @@ const RegisterPage = () => {
     return (
       <AuthLayout>
         {currentUser.metadata.error && (
+          // Show error popup if error flag is set in currentUser metadata
           <ErrorPopup
             message={currentUser.metadata.error}
             onClose={() =>
@@ -60,6 +60,7 @@ const RegisterPage = () => {
         )}
         <h2 className="verify-title">Verify your account</h2>
         <form onSubmit={handleSubmit(verifyEmail)} className="space-y-6">
+          {/* Form input for verification code */}
           <FormInput
             id="code"
             name="code"
@@ -68,6 +69,7 @@ const RegisterPage = () => {
             register={register}
             errors={errors}
           />
+          {/* Verify email button */}
           <FormButton
             text="Verify Email"
             loading={currentUser.metadata.loading}
@@ -81,6 +83,7 @@ const RegisterPage = () => {
   return (
     <AuthLayout>
       {currentUser.metadata.error && (
+        // Show error popup if error flag is set in currentUser metadata
         <ErrorPopup
           message={currentUser.metadata.error}
           onClose={() =>
@@ -96,6 +99,7 @@ const RegisterPage = () => {
       )}
 
       {currentUser.metadata.modal && (
+        // Show modal if modal flag is set in currentUser metadata
         <Modal
           title="Email Sent"
           message="Please check your email for the verification link."
@@ -112,6 +116,7 @@ const RegisterPage = () => {
         )}
         className="space-y-6"
       >
+        {/* Form inputs for username, email, and password */}
         {["username", "email", "password"].map((field) => {
           const fieldName = field.charAt(0).toUpperCase() + field.slice(1);
           const isPasswordField = field === "password";
@@ -135,12 +140,16 @@ const RegisterPage = () => {
           );
         })}
 
+        {/* Checkbox for selecting magic link method */}
         <div className="flex items-center">
           <input
             id="checkbox"
             name="checkbox"
             type="checkbox"
-            checked={currentUser.metadata.strategy === "email_link"}
+            checked={
+              currentUser.metadata.strategy ===
+              process.env.REACT_APP_STRATEGY_EMAIL_LINK
+            }
             className="checkbox-input"
             {...register("checkbox")}
             onChange={(e) =>
@@ -148,7 +157,9 @@ const RegisterPage = () => {
                 ...prev,
                 metadata: {
                   ...prev.metadata,
-                  strategy: e.target.checked ? "email_link" : "email_code",
+                  strategy: e.target.checked
+                    ? process.env.REACT_APP_STRATEGY_EMAIL_LINK
+                    : process.env.REACT_APP_STRATEGY_EMAIL_CODE,
                 },
               }))
             }
@@ -158,29 +169,15 @@ const RegisterPage = () => {
           </label>
         </div>
 
+        {/* Sign up button */}
         <FormButton text="Sign Up" loading={currentUser.metadata.loading} />
 
+        {/* Footer */}
         <div className="register-footer">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true"
-            role="img"
-            className="icon-style iconify iconify--ph"
-            width="1em"
-            height="1em"
-            viewBox="0 0 256 256"
-          >
-            <g fill="currentColor">
-              <path
-                d="M200 128a72 72 0 1 1-72-72a72 72 0 0 1 72 72"
-                opacity=".2"
-              />
-              <path d="M214.86 180.12a8 8 0 0 1-11 2.74L136 142.13V216a8 8 0 0 1-16 0v-73.87l-67.88 40.73a8 8 0 1 1-8.23-13.72L112.45 128L43.89 86.86a8 8 0 1 1 8.23-13.72L120 113.87V40a8 8 0 0 1 16 0v73.87l67.88-40.73a8 8 0 1 1 8.23 13.72L143.55 128l68.56 41.14a8 8 0 0 1 2.75 10.98" />
-            </g>
-          </svg>
+          <Astrix />
           <span className="font-bold">
             Create Mini Courses, Bridges Pages & much more.
-          </span>
+          </span>{" "}
           <a href="/login" className="link-style">
             Already a member? Login here.
           </a>
