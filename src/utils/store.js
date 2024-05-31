@@ -1,6 +1,6 @@
 import { atom } from "jotai";
 
-// Atom for storing the current user data along with session and metadata
+// Atom (global state holding variable) for storing the current user data and can access from any page of our app.
 export const currentUserAtom = atom({
   session: null,
   username: null,
@@ -8,7 +8,7 @@ export const currentUserAtom = atom({
   metadata: {
     loading: false,
     error: null,
-    strategy: "email_code",
+    strategy: process.env.REACT_APP_STRATEGY_EMAIL_CODE,
     modal: false,
     pendingVerification: false,
     emailSent: false,

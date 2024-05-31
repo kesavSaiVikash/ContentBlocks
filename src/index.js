@@ -1,24 +1,25 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css"; // Importing CSS for styling
-import App from "./App"; // Importing the main App component
-import { ClerkProvider } from "@clerk/clerk-react"; // Importing ClerkProvider for authentication
+import "./index.css";
+import App from "./App";
+import { ClerkProvider } from "@clerk/clerk-react";
 
-// Imported publishable key
-const PUBLISHABLE_KEY = process.env.REACT_APP_PUBLISHABLE_KEY; // Retrieving the publishable key from environment variables
+const PUBLISHABLE_KEY = process.env.REACT_APP_PUBLISHABLE_KEY; // Fetching the publishable key from environment variables
 
 if (!PUBLISHABLE_KEY) {
-  throw new Error("Missing Publishable Key"); // Throw an error if the publishable key is missing
+  throw new Error("Missing Publishable Key");
 }
 
-const root = ReactDOM.createRoot(document.getElementById("root")); // Creating a root for rendering React components in the DOM
+const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
-  // Rendering the application within the root
   <React.StrictMode>
+    {/* Wrapping the App component with ClerkProvider and passing the publishable key, 
+    this way we ensuring easy access authentication-related functionality throughout our app 
+    without needing to pass down props manually through multiple layers of components. */}
+
     <ClerkProvider publishableKey={PUBLISHABLE_KEY}>
-      {/* Wrapping the App component with ClerkProvider and passing the publishable key */}
-      <App /> {/* Rendering the main App component */}
+      <App />
     </ClerkProvider>
   </React.StrictMode>
 );

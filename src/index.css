@@ -1,3 +1,8 @@
+/* Includes the component styles, which are applied to elements using normalized styles and browser defaults. */
 @tailwind base;
+
+/* Includes the component styles, which are pre-designed styles for common UI components like buttons, forms, and alerts. */
 @tailwind components;
+
+/* Includes the utility styles, which are low-level utility classes that apply single-purpose styles like padding, margin, text color, etc. */
 @tailwind utilities;

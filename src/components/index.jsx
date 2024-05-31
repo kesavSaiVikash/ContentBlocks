@@ -1,4 +1,4 @@
-import "./index.css"; // Tailwind css styles for all the components
+import "./index.css"; // Custom CSS classes wrapped around the Tailwind css styles for all the components.
 
 // Exports of Components
 export { default as AuthLayout } from "./AuthLayout";
@@ -9,3 +9,4 @@ export { default as Navbar } from "./Navbar";
 export { default as Modal } from "./Modal";
 export { default as FormInput } from "./FormInput";
 export { default as FormButton } from "./FormButton";
+export { default as ProtectedRoute } from "./ProtectedRoute";

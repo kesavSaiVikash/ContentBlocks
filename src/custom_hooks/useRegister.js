@@ -9,8 +9,8 @@ const useRegister = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
   const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
 
-  // Function to register a new user
-  const registerUser = async (data, strategy = "email_code") => {
+  // Function to register a new user.
+  const registerUser = async (data, strategy) => {
     if (!isLoaded || currentUser.metadata.loading) return;
 
     setCurrentUser((prev) => ({
@@ -23,16 +23,16 @@ const useRegister = () => {
     }));
 
     try {
-      // Create a new user account
+      // Create a new user account.
       await signUp.create({
         username: data.username,
         email_address: data.email,
         password: data.password,
       });
 
-      // Prepare email address verification based on the selected strategy
+      // Prepare email address verification based on the selected strategy.
       switch (strategy) {
-        case "email_code":
+        case process.env.REACT_APP_STRATEGY_EMAIL_CODE:
           await signUp.prepareEmailAddressVerification({ strategy });
           setCurrentUser((prev) => ({
             ...prev,
@@ -43,10 +43,10 @@ const useRegister = () => {
           }));
           break;
 
-        case "email_link":
+        case process.env.REACT_APP_STRATEGY_EMAIL_LINK:
           await signUp.prepareEmailAddressVerification({
             strategy,
-            redirectUrl: "http://localhost:3000",
+            redirectUrl: process.env.REACT_APP_REDIRECT_URL,
           });
           setCurrentUser((prev) => ({
             ...prev,
@@ -61,7 +61,7 @@ const useRegister = () => {
           console.error("Unknown verification strategy:", strategy);
       }
 
-      // Update currentUserAtom with the new user's details
+      // Update currentUserAtom with the new user's details.
       setCurrentUser((prev) => ({
         ...prev,
         session: null,
@@ -69,7 +69,7 @@ const useRegister = () => {
         email: data.email,
       }));
     } catch (err) {
-      // Handle errors
+      // Handle errors.
       const errorMessage = isClerkAPIResponseError(err)
         ? err.errors[0].longMessage
         : "An error occurred. Please try again later.";
@@ -82,7 +82,7 @@ const useRegister = () => {
         },
       }));
     } finally {
-      // Set loading to false when registration process is completed
+      // Set loading to false when registration process is completed.
       setCurrentUser((prev) => ({
         ...prev,
         metadata: {
@@ -93,7 +93,7 @@ const useRegister = () => {
     }
   };
 
-  // Function to verify email address after registration
+  // Function to verify email address after registration.
   const verifyEmail = async (data) => {
     if (!isLoaded || currentUser.metadata.loading) return;
 
@@ -107,12 +107,12 @@ const useRegister = () => {
     }));
 
     try {
-      // Attempt email address verification
+      // Attempt email address verification.
       const completeSignUp = await signUp.attemptEmailAddressVerification({
         code: data.code,
       });
 
-      // Redirect to home page if verification is successful
+      // Redirect to home page if verification is successful.
       if (completeSignUp.status === "complete" || "needs_first_factor") {
         await setActive({ session: completeSignUp.createdSessionId });
         navigate("/");
@@ -131,7 +131,7 @@ const useRegister = () => {
         },
       }));
     } finally {
-      // Set loading to false when verification process is completed
+      // Set loading to false when verification process is completed.
       setCurrentUser((prev) => ({
         ...prev,
         metadata: {
@@ -142,7 +142,6 @@ const useRegister = () => {
     }
   };
 
-  // Return the registerUser and verifyEmail functions
   return {
     registerUser,
     verifyEmail,

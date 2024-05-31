@@ -1,6 +1,6 @@
 import "./index.css"
 
-//Exports for Pages
+// Exports for Pages.
 
 export { default as ForgotPassword } from "./ForgotPassword";
 export { default as Home } from "./Home";

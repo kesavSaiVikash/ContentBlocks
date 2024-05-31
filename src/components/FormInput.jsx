@@ -1,7 +1,8 @@
 import React from "react";
-import { ErrorMessage } from "../components"; 
+import { ErrorMessage } from "../components";
 
-// A form input component with error handling
+// This is a form input component with error handling.
+
 const FormInput = ({
   id,
   name,
@@ -32,7 +33,6 @@ const FormInput = ({
       })}
     />
     {errors[name] && <ErrorMessage message={errors[name].message} />}
-    {/* Show error message if there is an error for this input */}
   </div>
 );
 

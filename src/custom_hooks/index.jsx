@@ -1,4 +1,4 @@
-//Exports for Hooks
+//Exports for Hooks.
 
 export { default as useForgotPassword } from "./useForgotPassword";
 export { default as useLogin } from "./useLogin";

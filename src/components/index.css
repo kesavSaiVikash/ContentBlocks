@@ -1,4 +1,8 @@
-/* Your custom styles */
+/* Global custom tailwind styles file for all of our COMPONENTS only. */
+
+/* @apply directive is used to apply existing utility classes to a custom CSS class. 
+This allowed me to create reusable styles by combining Tailwind utility classes. */
+
 .bg-auth {
   @apply min-h-screen flex flex-col items-center justify-center bg-gray-100 bg-cover bg-center;
 }

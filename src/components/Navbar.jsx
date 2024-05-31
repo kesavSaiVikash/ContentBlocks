@@ -2,14 +2,15 @@ import React from "react";
 import { Loading } from ".";
 import { useLogout } from "../custom_hooks";
 
-// Navbar component with logo and logout button
+// Navbar component with logo and logout button.
+
 const Navbar = () => {
-  const { handleLogout, loading } = useLogout(); // Using useLogout custom hook
+  const { handleLogout, loading } = useLogout();
 
   return loading ? ( // Display loading spinner if loading
     <Loading />
   ) : (
-    // Navbar with logo and logout button
+    // Navbar with logo and logout button.
     <nav className="navbar">
       <div className="navbar-content">
         <div className="navbar-logo">
@@ -20,8 +21,8 @@ const Navbar = () => {
         </div>
         <button
           className="navbar-button"
-          onClick={handleLogout} // Logout button calls handleLogout function
-          disabled={loading} // Disable button if loading
+          onClick={handleLogout} // Logout button calls handleLogout function.
+          disabled={loading} // Disable button if loading.
         >
           Logout
         </button>

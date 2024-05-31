@@ -6,9 +6,9 @@ const useForgotPassword = () => {
   const { signIn } = useSignIn();
   const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
 
-  // Function to request a password reset
+  // Function to request a password reset.
   const requestPasswordReset = async (email) => {
-    // Set loading state and reset other metadata
+    // Set loading state and reset other metadata.
     setCurrentUser((prev) => ({
       ...prev,
       metadata: {
@@ -21,13 +21,13 @@ const useForgotPassword = () => {
     }));
 
     try {
-      // Send password reset email
+      // Send password reset email.
       await signIn.create({
-        strategy: "reset_password_email_code",
+        strategy: process.env.REACT_APP_STRATEGY_PASSWORD_RESET,
         identifier: email,
       });
 
-      // Update metadata after successful request
+      // Update metadata after successful request.
       setCurrentUser((prev) => ({
         ...prev,
         metadata: {
@@ -37,7 +37,7 @@ const useForgotPassword = () => {
         },
       }));
     } catch (err) {
-      // Handle errors
+      // Handle errors.
       const errorMessage =
         err?.errors?.[0]?.longMessage || "An unknown error occurred.";
       setCurrentUser((prev) => ({
@@ -51,7 +51,7 @@ const useForgotPassword = () => {
     }
   };
 
-  // Function to verify reset code and set new password
+  // Function to verify reset code and set new password.
   const verifyResetCode = async (code, password) => {
     setCurrentUser((prev) => ({
       ...prev,
@@ -66,7 +66,7 @@ const useForgotPassword = () => {
 
     try {
       const result = await signIn.attemptFirstFactor({
-        strategy: "reset_password_email_code",
+        strategy: process.env.REACT_APP_STRATEGY_PASSWORD_RESET,
         code,
         password,
       });
@@ -95,7 +95,7 @@ const useForgotPassword = () => {
     }
   };
 
-  // Return the necessary functions and state for password reset
+  // Return the necessary functions and state for password reset.
   return {
     requestPasswordReset,
     verifyResetCode,

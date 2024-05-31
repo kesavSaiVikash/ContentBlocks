@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useForgotPassword, useLogout } from "../custom_hooks";
+import { ReactComponent as Astrix } from "../assets/astrix.svg";
 import {
   AuthLayout,
   ErrorPopup,
@@ -11,11 +12,13 @@ import {
 } from "../components";
 
 const ForgotPasswordPage = () => {
+  // Hooks for navigation, form handling, and custom authentication logic
   const navigate = useNavigate();
   const { handleLogout } = useLogout();
   const { requestPasswordReset, verifyResetCode, currentUser, setCurrentUser } =
     useForgotPassword();
 
+  // Form handling with react-hook-form
   const {
     register,
     handleSubmit,
@@ -23,6 +26,7 @@ const ForgotPasswordPage = () => {
     formState: { errors },
   } = useForm({ mode: "all" });
 
+  // Form submission logic
   const onSubmit = async (data) => {
     reset();
     if (!currentUser.metadata.emailSent) {
@@ -37,8 +41,10 @@ const ForgotPasswordPage = () => {
   };
 
   return (
+    // Layout component for authentication pages
     <AuthLayout>
       {currentUser.metadata.modal && (
+        // Modal component for showing messages
         <Modal
           message="Password reset successful. Please log in with your new password."
           confirmText="Login Back"
@@ -48,7 +54,6 @@ const ForgotPasswordPage = () => {
               ...prevState,
               metadata: { ...prevState.metadata, modal: false },
             }));
-
             navigate("/login");
           }}
           onClose={() => {
@@ -64,6 +69,7 @@ const ForgotPasswordPage = () => {
       )}
 
       {currentUser.metadata.error && (
+        // ErrorPopup component for displaying errors
         <ErrorPopup
           message={currentUser.metadata.error}
           onClose={() =>
@@ -77,13 +83,13 @@ const ForgotPasswordPage = () => {
 
       <div className="forgot-password-container">
         <h2 className="forgot-password-title">Forgot Password?</h2>
-
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="forgot-password-form"
           autoComplete="off"
         >
           {!currentUser.metadata.emailSent ? (
+            // Form fields for requesting password reset code
             <>
               <FormInput
                 id="email"
@@ -99,6 +105,7 @@ const ForgotPasswordPage = () => {
               />
             </>
           ) : (
+            // Form fields for entering reset code and new password
             <>
               <FormInput
                 id="password"
@@ -124,28 +131,11 @@ const ForgotPasswordPage = () => {
           )}
 
           <div className="forgot-password-footer">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-              role="img"
-              className="icon-style iconify iconify--ph"
-              width="1em"
-              height="1em"
-              viewBox="0 0 256 256"
-            >
-              <g fill="currentColor">
-                <path
-                  d="M200 128a72 72 0 1 1-72-72a72 72 0 0 1 72 72"
-                  opacity=".2"
-                />
-                <path d="M214.86 180.12a8 8 0 0 1-11 2.74L136 142.13V216a8 8 0 0 1-16 0v-73.87l-67.88 40.73a8 8 0 1 1-8.23-13.72L112.45 128L43.89 86.86a8 8 0 1 1 8.23-13.72L120 113.87V40a8 8 0 0 1 16 0v73.87l67.88-40.73a8 8 0 1 1 8.23 13.72L143.55 128l68.56 41.14a8 8 0 0 1 2.75 10.98" />
-              </g>
-            </svg>
+            <Astrix />
             <span className="font-bold">
-              Create Mini Courses, Bridges Pages & much more.
+              Create Mini Courses, Bridges Pages & much more.{" "}
             </span>
             <a href="/login" className="link-style">
-              {" "}
               Remember Password? Login here.
             </a>
           </div>
