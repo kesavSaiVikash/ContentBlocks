@@ -58,9 +58,7 @@ const RegisterPage = () => {
             }
           />
         )}
-        <h2 className="text-2xl font-bold mb-8 text-center">
-          Verify your account
-        </h2>
+        <h2 className="verify-title">Verify your account</h2>
         <form onSubmit={handleSubmit(verifyEmail)} className="space-y-6">
           <FormInput
             id="code"
@@ -106,9 +104,7 @@ const RegisterPage = () => {
         />
       )}
 
-      <h2 className="text-2xl font-bold mb-8 text-center">
-        Create Your Account
-      </h2>
+      <h2 className="register-title">Create Your Account</h2>
 
       <form
         onSubmit={handleSubmit((data) =>
@@ -145,7 +141,7 @@ const RegisterPage = () => {
             name="checkbox"
             type="checkbox"
             checked={currentUser.metadata.strategy === "email_link"}
-            className="mr-2 p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-600"
+            className="checkbox-input"
             {...register("checkbox")}
             onChange={(e) =>
               setCurrentUser((prev) => ({
@@ -164,13 +160,12 @@ const RegisterPage = () => {
 
         <FormButton text="Sign Up" loading={currentUser.metadata.loading} />
 
-        <div className="text-md text-center mt-4 font-medium">
+        <div className="register-footer">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            xmlnsXlink="http://www.w3.org/1999/xlink"
             aria-hidden="true"
             role="img"
-            className="inline-block mr-2 iconify iconify--ph"
+            className="icon-style iconify iconify--ph"
             width="1em"
             height="1em"
             viewBox="0 0 256 256"
@@ -186,10 +181,7 @@ const RegisterPage = () => {
           <span className="font-bold">
             Create Mini Courses, Bridges Pages & much more.
           </span>
-          <a
-            href="/login"
-            className="ml-2 font-bold text-indigo-500 hover:underline"
-          >
+          <a href="/login" className="link-style">
             Already a member? Login here.
           </a>
         </div>

@@ -59,9 +59,9 @@ const Login = () => {
         />
       )}
 
-      <h2 className="text-2xl font-bold mb-8 text-center">Welcome Back!</h2>
+      <h2 className="login-title">Welcome Back!</h2>
 
-      <form className="space-y-6" onSubmit={handleSubmit(login)}>
+      <form className="login-form" onSubmit={handleSubmit(login)}>
         <FormInput
           id="email"
           name="email"
@@ -86,16 +86,14 @@ const Login = () => {
             errors={errors}
           />
         )}
-        <div className="flex items-center">
-          <div className="flex items-center mr-4">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center">
             <input
               id="checkbox"
               name="checkbox"
               type="checkbox"
-              checked={
-                currentUser.metadata.strategy === "email_link" ? true : false
-              }
-              className="mr-2 p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-600"
+              checked={currentUser.metadata.strategy === "email_link"}
+              className="checkbox-input"
               {...register("checkbox")}
               onChange={(e) =>
                 setCurrentUser((prevState) => ({
@@ -107,15 +105,12 @@ const Login = () => {
                 }))
               }
             />
-            <label htmlFor="checkbox" className="font-semibold">
+            <label htmlFor="checkbox" className="checkbox-label">
               Magic link method
             </label>
           </div>
-          <div className="flex items-center">
-            <a
-              href="/forgot-password"
-              className="font-bold text-indigo-500 hover:underline"
-            >
+          <div>
+            <a href="/forgot-password" className="forgot-password-link">
               Forgot password?
             </a>
           </div>
@@ -124,22 +119,15 @@ const Login = () => {
         <FormButton text="Login" loading={currentUser.metadata.loading} />
       </form>
 
-      <div className="flex items-center justify-center border-t-2 border-gray-500 mt-12">
-        <h2 className="bg-white py-3 px-6 -mt-6 font-bold text-gray-400">OR</h2>
+      <div className="divider">
+        <h2 className="divider-text">OR</h2>
       </div>
       <div className="mt-4 text-center">
-        <div className="text-xl font-bold mb-4">
-          Get Started with ContentBlocks
-        </div>
-        <a
-          className="block w-full py-4 bg-purple-600 text-white text-lg text-center rounded-md font-semibold hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-600"
-          href="/register"
-        >
+        <div className="get-started-title">Get Started with ContentBlocks</div>
+        <a className="get-started-button" href="/register">
           Create Your Account
         </a>
-        <div className="text-md mt-4 text-gray-600">
-          Your first workspace is free!
-        </div>
+        <div className="free-workspace-text">Your first workspace is free!</div>
       </div>
     </AuthLayout>
   );

@@ -10,16 +10,16 @@ const Navbar = () => {
     <Loading />
   ) : (
     // Navbar with logo and logout button
-    <nav className="bg-gray-800 p-4">
-      <div className="flex items-center justify-between">
-        <div className="text-white">
+    <nav className="navbar">
+      <div className="navbar-content">
+        <div className="navbar-logo">
           <img
             src="https://app.contentblocks.com/favicon.ico"
             alt="Content Blocks Favicon"
           />
         </div>
         <button
-          className="bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-md font-semibold focus:outline-none focus:ring-2 focus:ring-purple-600"
+          className="navbar-button"
           onClick={handleLogout} // Logout button calls handleLogout function
           disabled={loading} // Disable button if loading
         >

@@ -1,5 +1,6 @@
-// Exports of Components
+import "./index.css"; // Tailwind css styles for all the components
 
+// Exports of Components
 export { default as AuthLayout } from "./AuthLayout";
 export { default as ErrorMessage } from "./ErrorMessage";
 export { default as ErrorPopup } from "./ErrorPopup";
