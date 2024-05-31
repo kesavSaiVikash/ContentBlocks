@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useForgotPassword, useLogout } from "../custom_hooks";
 import {
@@ -10,31 +11,25 @@ import {
 } from "../components";
 
 const ForgotPasswordPage = () => {
-  const {
-    requestPasswordReset,
-    verifyResetCode,
-    loading,
-    emailSent,
-    error,
-    setError,
-    modal,
-  } = useForgotPassword(); // Custom hook for handling password reset functionality
-  const { handleLogout } = useLogout(); // Custom hook for handling user logout functionality
+  const navigate = useNavigate();
+  const { handleLogout } = useLogout();
+  const { requestPasswordReset, verifyResetCode, currentUser, setCurrentUser } =
+    useForgotPassword();
 
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({ mode: "all" }); // React Hook Form for form handling
+  } = useForm({ mode: "all" });
 
   const onSubmit = async (data) => {
-    reset(); // Reset form after submission
-    if (!emailSent) {
-      await requestPasswordReset(data.email); // Request password reset if email is not sent
+    reset();
+    if (!currentUser.metadata.emailSent) {
+      await requestPasswordReset(data.email);
     } else {
       try {
-        await verifyResetCode(data.code, data.password); // Verify reset code and update password
+        await verifyResetCode(data.code, data.password);
       } catch (err) {
         console.error("Password reset failed", err);
       }
@@ -43,17 +38,42 @@ const ForgotPasswordPage = () => {
 
   return (
     <AuthLayout>
-      {modal && (
+      {currentUser.metadata.modal && (
         <Modal
           message="Password reset successful. Please log in with your new password."
-          onConfirm={handleLogout}
-          onClose={handleLogout}
           confirmText="Login Back"
+          onConfirm={() => {
+            handleLogout();
+            setCurrentUser((prevState) => ({
+              ...prevState,
+              metadata: { ...prevState.metadata, modal: false },
+            }));
+
+            navigate("/login");
+          }}
+          onClose={() => {
+            handleLogout();
+            setCurrentUser((prevState) => ({
+              ...prevState,
+              metadata: { ...prevState.metadata, modal: false },
+            }));
+            navigate("/login");
+          }}
           title="Password Reset"
         />
       )}
 
-      {error && <ErrorPopup message={error} onClose={() => setError(null)} />}
+      {currentUser.metadata.error && (
+        <ErrorPopup
+          message={currentUser.metadata.error}
+          onClose={() =>
+            setCurrentUser((prevState) => ({
+              ...prevState,
+              metadata: { ...prevState.metadata, error: null },
+            }))
+          }
+        />
+      )}
 
       <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-bold mb-8 text-center">
@@ -65,7 +85,7 @@ const ForgotPasswordPage = () => {
           className="space-y-6"
           autoComplete="off"
         >
-          {!emailSent ? (
+          {!currentUser.metadata.emailSent ? (
             <>
               <FormInput
                 id="email"
@@ -75,7 +95,10 @@ const ForgotPasswordPage = () => {
                 register={register}
                 errors={errors}
               />
-              <FormButton text="Send Reset Code" loading={loading} />
+              <FormButton
+                text="Send Reset Code"
+                loading={currentUser.metadata.loading}
+              />
             </>
           ) : (
             <>
@@ -95,7 +118,10 @@ const ForgotPasswordPage = () => {
                 register={register}
                 errors={errors}
               />
-              <FormButton text="Reset Password" loading={loading} />
+              <FormButton
+                text="Reset Password"
+                loading={currentUser.metadata.loading}
+              />
             </>
           )}
 
@@ -119,7 +145,7 @@ const ForgotPasswordPage = () => {
             </svg>
             <span className="font-bold">
               Create Mini Courses, Bridges Pages & much more.
-            </span>{" "}
+            </span>
             <a
               href="/login"
               className="font-bold text-indigo-500 hover:underline"

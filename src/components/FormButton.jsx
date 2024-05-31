@@ -1,5 +1,5 @@
 import React from "react";
-import { Loading } from "../components"; // Importing the Loading component
+import { Loading } from "."; // Importing the Loading component
 
 // A button component used in forms, with loading state handling
 const FormButton = ({ text, loading }) => (

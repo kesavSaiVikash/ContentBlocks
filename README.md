@@ -52,3 +52,11 @@
 - Displayed error messages to users for feedback and troubleshooting.
 
 6. Future Improvements
+
+---
+
+1. registration flow - Users can signup/ register using username, email and passoword. This can be done two ways:
+    1) if magic link method then user will receive a magic link email which user can click on the link and login,
+    2) if no magic link then its a traditional password reset flow 
+2. login flow
+3. forgot password flow

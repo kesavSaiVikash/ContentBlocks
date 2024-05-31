@@ -1,43 +1,46 @@
 import { useSignUp } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
-import { useAtom } from "jotai";
 import { isClerkAPIResponseError } from "@clerk/clerk-react/errors";
-import {
-  loadingAtom,
-  errorAtom,
-  pendingVerificationAtom,
-  modalAtom,
-  strategyAtom,
-} from "../utils/store";
+import { currentUserAtom } from "../utils/store";
+import { useAtom } from "jotai";
 
 const useRegister = () => {
-  const navigate = useNavigate(); // Use react-router-dom's useNavigate hook
-  const { isLoaded, signUp, setActive } = useSignUp(); // Use Clerk's useSignUp hook
-  const [loading, setLoading] = useAtom(loadingAtom); // Use jotai's useAtom hook to manage loading state
-  const [error, setError] = useAtom(errorAtom); // Use jotai's useAtom hook to manage error state
-  const [modal, setModal] = useAtom(modalAtom); // Use jotai's useAtom hook to manage modal state
-  const [strategy, setStrategy] = useAtom(strategyAtom); // Use jotai's useAtom hook to manage strategy state
-  const [pendingVerification, setPendingVerification] = useAtom(
-    // Use jotai's useAtom hook to manage pending verification state
-    pendingVerificationAtom
-  );
+  const navigate = useNavigate();
+  const { isLoaded, signUp, setActive } = useSignUp();
+  const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
 
-  // Register a new user
+  // Function to register a new user
   const registerUser = async (data, strategy = "email_code") => {
-    if (!isLoaded || loading) return;
-    setLoading(true); // Set loading to true
-    setError(null); // Clear any previous errors
+    if (!isLoaded || currentUser.metadata.loading) return;
+
+    setCurrentUser((prev) => ({
+      ...prev,
+      metadata: {
+        ...prev.metadata,
+        loading: true,
+        error: null,
+      },
+    }));
+
     try {
+      // Create a new user account
       await signUp.create({
         username: data.username,
         email_address: data.email,
         password: data.password,
-      }); // Use Clerk's signUp.create method to register the user
+      });
 
+      // Prepare email address verification based on the selected strategy
       switch (strategy) {
         case "email_code":
           await signUp.prepareEmailAddressVerification({ strategy });
-          setPendingVerification(true);
+          setCurrentUser((prev) => ({
+            ...prev,
+            metadata: {
+              ...prev.metadata,
+              pendingVerification: true,
+            },
+          }));
           break;
 
         case "email_link":
@@ -45,58 +48,104 @@ const useRegister = () => {
             strategy,
             redirectUrl: "http://localhost:3000",
           });
-          setModal(true);
+          setCurrentUser((prev) => ({
+            ...prev,
+            metadata: {
+              ...prev.metadata,
+              modal: true,
+            },
+          }));
           break;
 
         default:
           console.error("Unknown verification strategy:", strategy);
       }
+
+      // Update currentUserAtom with the new user's details
+      setCurrentUser((prev) => ({
+        ...prev,
+        session: null,
+        username: data.username,
+        email: data.email,
+      }));
     } catch (err) {
+      // Handle errors
       const errorMessage = isClerkAPIResponseError(err)
         ? err.errors[0].longMessage
         : "An error occurred. Please try again later.";
-      console.error(err.errors[0].longMessage);
-      setError(errorMessage);
+
+      setCurrentUser((prev) => ({
+        ...prev,
+        metadata: {
+          ...prev.metadata,
+          error: errorMessage,
+        },
+      }));
     } finally {
-      setLoading(false); // Set loading to false after registration completes
+      // Set loading to false when registration process is completed
+      setCurrentUser((prev) => ({
+        ...prev,
+        metadata: {
+          ...prev.metadata,
+          loading: false,
+        },
+      }));
     }
   };
 
-  // Verify the email address after registration
+  // Function to verify email address after registration
   const verifyEmail = async (data) => {
-    if (!isLoaded || loading) return;
-    setLoading(true); // Set loading to true
-    setError(null); // Clear any previous errors
+    if (!isLoaded || currentUser.metadata.loading) return;
+
+    setCurrentUser((prev) => ({
+      ...prev,
+      metadata: {
+        ...prev.metadata,
+        loading: true,
+        error: null,
+      },
+    }));
+
     try {
+      // Attempt email address verification
       const completeSignUp = await signUp.attemptEmailAddressVerification({
         code: data.code,
-      }); // Use Clerk's signUp.attemptEmailAddressVerification method to verify email address
+      });
+
+      // Redirect to home page if verification is successful
       if (completeSignUp.status === "complete" || "needs_first_factor") {
         await setActive({ session: completeSignUp.createdSessionId });
-        navigate("/"); // Redirect to home page after successful verification
+        navigate("/");
       }
     } catch (err) {
+      // Handle errors
       const errorMessage = isClerkAPIResponseError(err)
         ? err.errors[0].longMessage
         : "An error occurred. Please try again later.";
-      setError(errorMessage);
+
+      setCurrentUser((prev) => ({
+        ...prev,
+        metadata: {
+          ...prev.metadata,
+          error: errorMessage,
+        },
+      }));
     } finally {
-      setLoading(false); // Set loading to false after verification completes
+      // Set loading to false when verification process is completed
+      setCurrentUser((prev) => ({
+        ...prev,
+        metadata: {
+          ...prev.metadata,
+          loading: false,
+        },
+      }));
     }
   };
 
-  // Return the registerUser and verifyEmail functions along with the loading, error, pendingVerification, setError, modal, setModal, strategy, and setStrategy states
+  // Return the registerUser and verifyEmail functions
   return {
     registerUser,
     verifyEmail,
-    loading,
-    error,
-    pendingVerification,
-    setError,
-    modal,
-    setModal,
-    strategy,
-    setStrategy,
   };
 };
 

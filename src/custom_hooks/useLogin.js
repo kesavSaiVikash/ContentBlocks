@@ -3,43 +3,36 @@ import { useAtom } from "jotai";
 import { useNavigate } from "react-router-dom";
 import { useSignIn, useSession, useUser } from "@clerk/clerk-react";
 import { isClerkAPIResponseError } from "@clerk/clerk-react/errors";
-import {
-  sessionAtom,
-  userAtom,
-  loadingAtom,
-  errorAtom,
-  strategyAtom,
-  modalAtom,
-} from "../utils/store";
+import { currentUserAtom } from "../utils/store";
 
 const useLogin = () => {
-  const { isLoaded: isSignInLoaded, signIn, setActive } = useSignIn();
+  const navigate = useNavigate();
+  const { signIn, setActive } = useSignIn();
   const { isLoaded: isSessionLoaded, session } = useSession();
   const { isLoaded: isUserLoaded, user } = useUser();
-  const [storedSession, setStoredSession] = useAtom(sessionAtom);
-  const [storedUser, setStoredUser] = useAtom(userAtom);
-  const [strategy, setStrategy] = useAtom(strategyAtom);
-  const [loading, setLoading] = useAtom(loadingAtom);
-  const [modal, setModal] = useAtom(modalAtom);
-  const [error, setError] = useAtom(errorAtom);
-  const navigate = useNavigate();
+  const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
 
-  // Redirect to home page if session and user are loaded
+  // Effect to handle redirection and updating currentUser on session and user load
   useEffect(() => {
+    setCurrentUser((prevState) => ({
+      ...prevState,
+      metadata: {
+        ...prevState.metadata,
+        strategy: "email_code",
+      },
+    }));
+
     if (isSessionLoaded && session && isUserLoaded && user) {
-      setStoredSession(session);
-      setStoredUser(user);
+      setCurrentUser((prevState) => ({
+        ...prevState,
+        session: session.id,
+        username: user.username,
+        email: user.primaryEmailAddress?.emailAddress,
+      }));
+
       navigate("/");
     }
-  }, [
-    isSessionLoaded,
-    session,
-    isUserLoaded,
-    user,
-    navigate,
-    setStoredSession,
-    setStoredUser,
-  ]);
+  }, [isSessionLoaded, session, isUserLoaded, user, navigate, setCurrentUser]);
 
   // Handle sign-in process after creating the sign-in attempt
   const handleSignIn = async (completeSignIn) => {
@@ -47,7 +40,16 @@ const useLogin = () => {
       completeSignIn.status === "needs_first_factor" ||
       completeSignIn.status === "complete"
     ) {
-      strategy === "email_link" && setModal(true);
+      if (currentUser.metadata.strategy === "email_link") {
+        setCurrentUser((prevState) => ({
+          ...prevState,
+          metadata: {
+            ...prevState.metadata,
+            modal: true,
+          },
+        }));
+      }
+
       await setActive({ session: completeSignIn.createdSessionId });
 
       // Wait for user to be loaded before updating stored session and user
@@ -55,24 +57,39 @@ const useLogin = () => {
         await new Promise((resolve) => setTimeout(resolve, 100));
       }
 
-      setStoredSession(session);
-      setStoredUser(user);
+      setCurrentUser((prevState) => ({
+        ...prevState,
+        session: session.id,
+        username: user.username || user.firstName,
+        email:
+          user.primaryEmailAddress?.emailAddress ||
+          user.emailAddresses[0].emailAddress,
+      }));
+
       navigate("/");
     }
   };
 
   // Perform sign-in based on the selected strategy
   const login = async (data) => {
-    if (loading) return;
-    setLoading(true);
-    setError(null);
-    let completeSignIn;
+    if (currentUser.metadata.loading) return;
+
     try {
-      switch (strategy) {
+      setCurrentUser((prevState) => ({
+        ...prevState,
+        metadata: {
+          ...prevState.metadata,
+          loading: true,
+          error: null,
+        },
+      }));
+
+      let completeSignIn;
+      switch (currentUser.metadata.strategy) {
         case "email_link":
           completeSignIn = await signIn.create({
             identifier: data.email,
-            redirectUrl: "http://localhost:3000",
+            redirectUrl: process.env.REACT_APP_REDIRECT_URL,
             strategy: "email_link",
           });
           break;
@@ -87,28 +104,31 @@ const useLogin = () => {
 
       await handleSignIn(completeSignIn);
     } catch (err) {
-      const errorMessage = isClerkAPIResponseError(err)
-        ? err.errors[0].longMessage
-        : "An error occurred. Please try again later.";
-      setError(errorMessage);
+      const errorMessage =
+        isClerkAPIResponseError(err) && err.errors[0].longMessage;
+
+      setCurrentUser((prevState) => ({
+        ...prevState,
+        metadata: {
+          ...prevState.metadata,
+          error: errorMessage,
+        },
+      }));
     } finally {
-      setLoading(false);
+      setCurrentUser((prevState) => ({
+        ...prevState,
+        metadata: {
+          ...prevState.metadata,
+          loading: false,
+        },
+      }));
     }
   };
 
   return {
-    isSignInLoaded,
-    isSessionLoaded,
-    isUserLoaded,
-    session,
-    error,
-    setError,
-    loading,
     login,
-    strategy,
-    setStrategy,
-    modal,
-    setModal,
+    currentUser,
+    setCurrentUser,
   };
 };
 
