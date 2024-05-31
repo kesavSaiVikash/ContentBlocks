@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useSignIn, useSession, useUser } from "@clerk/clerk-react";
 import { isClerkAPIResponseError } from "@clerk/clerk-react/errors";
 import { currentUserAtom } from "../utils/store";
+// Import bcrypt for password hashing simulation
+// import bcrypt from "bcryptjs";
 
 const useLogin = () => {
   const navigate = useNavigate();
@@ -70,6 +72,12 @@ const useLogin = () => {
     }
   };
 
+  // Simulate password hashing using bcryptjs
+  // const simulatePasswordHashing = (password) => {
+  //   const salt = bcrypt.genSaltSync(10);
+  //   return bcrypt.hashSync(password, salt);
+  // };
+
   // Perform sign-in based on the selected strategy
   const login = async (data) => {
     if (currentUser.metadata.loading) return;
@@ -95,6 +103,9 @@ const useLogin = () => {
           break;
 
         default:
+          // Simulate password hashing before sending to Clerk
+          // const hashedPassword = simulatePasswordHashing(data.password);
+
           completeSignIn = await signIn.create({
             identifier: data.email,
             password: data.password,

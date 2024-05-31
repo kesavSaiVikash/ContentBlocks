@@ -101,7 +101,6 @@ const useForgotPassword = () => {
     verifyResetCode,
     currentUser,
     setCurrentUser,
-    modal: currentUser.metadata.modal,
   };
 };
 

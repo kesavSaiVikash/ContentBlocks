@@ -150,6 +150,7 @@ const ForgotPasswordPage = () => {
               href="/login"
               className="font-bold text-indigo-500 hover:underline"
             >
+              {" "}
               Remember Password? Login here.
             </a>
           </div>
