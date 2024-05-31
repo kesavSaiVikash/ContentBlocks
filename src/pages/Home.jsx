@@ -1,42 +1,28 @@
 import React, { useEffect } from "react";
 import { Navbar, Loading } from "../components";
-import { useSession, useUser } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import { useAtom } from "jotai";
-import { sessionAtom, userAtom } from "../utils/store";
+import { currentUserAtom } from "../utils/store";
 
 const Home = () => {
   const navigate = useNavigate();
-  const { isLoaded: isSessionLoaded, session } = useSession();
-  const { isLoaded: isUserLoaded, user } = useUser();
-  const [storedSession, setStoredSession] = useAtom(sessionAtom);
-  const [storedUser, setStoredUser] = useAtom(userAtom);
+  const [currentUser] = useAtom(currentUserAtom);
 
-  // Check if session and user are loaded, and set storedSession and storedUser
   useEffect(() => {
-    if (!isSessionLoaded || !isUserLoaded) return;
-
-    if (session && user) {
-      setStoredSession(session);
-      setStoredUser(user);
-    } else {
+    if (!currentUser.session) {
       navigate("/login");
     }
-  }, [session, user]);
-
-  // Show loading indicator until storedSession and storedUser are set
-  if (!storedSession || !storedUser) {
-    return <Loading />;
-  }
+  }, [currentUser, navigate]);
 
   return (
     <>
+      {currentUser.metadata.loading && <Loading />}
       <Navbar />
       <div className="min-h-screen bg-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
           <div className="text-center">
             <h1 className="text-4xl font-bold text-gray-900 mb-8">
-              Welcome back, {storedUser.username}
+              Welcome back, {currentUser.username}
             </h1>
             <p className="text-lg text-gray-700">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit...

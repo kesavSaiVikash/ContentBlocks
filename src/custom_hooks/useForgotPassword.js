@@ -1,73 +1,107 @@
 import { useSignIn } from "@clerk/clerk-react";
 import { useAtom } from "jotai";
-import {
-  errorAtom,
-  loadingAtom,
-  emailSentAtom,
-  modalAtom,
-} from "../utils/store";
+import { currentUserAtom } from "../utils/store";
 
 const useForgotPassword = () => {
   const { signIn } = useSignIn();
-  const [loading, setLoading] = useAtom(loadingAtom);
-  const [error, setError] = useAtom(errorAtom);
-  const [emailSent, setEmailSent] = useAtom(emailSentAtom);
-  const [modal, setModal] = useAtom(modalAtom);
+  const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
 
-  // Request a password reset email
+  // Function to request a password reset
   const requestPasswordReset = async (email) => {
-    setLoading(true); // Set loading to true
-    setError(null); // Clear any previous errors
+    // Set loading state and reset other metadata
+    setCurrentUser((prev) => ({
+      ...prev,
+      metadata: {
+        ...prev.metadata,
+        loading: true,
+        error: null,
+        emailSent: false,
+        modal: false,
+      },
+    }));
+
     try {
+      // Send password reset email
       await signIn.create({
         strategy: "reset_password_email_code",
         identifier: email,
-      }); // Use Clerk's signIn.create method to send reset password email
-      setEmailSent(true); // Set emailSent to true after successful email request
+      });
+
+      // Update metadata after successful request
+      setCurrentUser((prev) => ({
+        ...prev,
+        metadata: {
+          ...prev.metadata,
+          loading: false,
+          emailSent: true,
+        },
+      }));
     } catch (err) {
+      // Handle errors
       const errorMessage =
-        err?.errors?.[0]?.longMessage || "An unknown error occurred."; // Extract error message from response
-      console.error("Error sending reset password email:", errorMessage); // Log error message
-      setError(errorMessage); // Set error message
-    } finally {
-      setLoading(false); // Set loading to false after request completes
+        err?.errors?.[0]?.longMessage || "An unknown error occurred.";
+      setCurrentUser((prev) => ({
+        ...prev,
+        metadata: {
+          ...prev.metadata,
+          loading: false,
+          error: errorMessage,
+        },
+      }));
     }
   };
 
-  // Verify the reset code and set a new password
+  // Function to verify reset code and set new password
   const verifyResetCode = async (code, password) => {
-    setLoading(true); // Set loading to true
-    setError(null); // Clear any previous errors
+    setCurrentUser((prev) => ({
+      ...prev,
+      metadata: {
+        ...prev.metadata,
+        loading: true,
+        error: null,
+        emailSent: false,
+        modal: false,
+      },
+    }));
+
     try {
       const result = await signIn.attemptFirstFactor({
         strategy: "reset_password_email_code",
         code,
         password,
-      }); // Use Clerk's signIn.attemptFirstFactor method to verify reset code
+      });
+
       if (result.status === "complete") {
-        setModal(true); // Show modal if reset is complete
-        setEmailSent(false); // Set emailSent to false after modal is shown
+        setCurrentUser((prev) => ({
+          ...prev,
+          metadata: {
+            ...prev.metadata,
+            loading: false,
+            modal: true,
+          },
+        }));
       }
     } catch (err) {
       const errorMessage =
-        err?.errors?.[0]?.longMessage || "An unknown error occurred."; // Extract error message from response
-      console.error("Error verifying reset code:", errorMessage); // Log error message
-      setError(errorMessage); // Set error message
-    } finally {
-      setLoading(false); // Set loading to false after verification completes
+        err?.errors?.[0]?.longMessage || "An unknown error occurred.";
+      setCurrentUser((prev) => ({
+        ...prev,
+        metadata: {
+          ...prev.metadata,
+          loading: false,
+          error: errorMessage,
+        },
+      }));
     }
   };
 
+  // Return the necessary functions and state for password reset
   return {
     requestPasswordReset,
     verifyResetCode,
-    loading,
-    emailSent,
-    setEmailSent,
-    error,
-    setError,
-    modal,
-    setModal,
+    currentUser,
+    setCurrentUser,
+    modal: currentUser.metadata.modal,
   };
 };
 

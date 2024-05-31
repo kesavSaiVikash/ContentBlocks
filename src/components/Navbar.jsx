@@ -1,5 +1,5 @@
 import React from "react";
-import { Loading } from "../components";
+import { Loading } from ".";
 import { useLogout } from "../custom_hooks";
 
 // Navbar component with logo and logout button

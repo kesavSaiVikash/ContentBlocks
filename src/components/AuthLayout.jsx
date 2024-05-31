@@ -12,12 +12,10 @@ const AuthLayout = ({ children }) => {
       }}
     >
       <div className="bg-white p-8 border-2 border-black rounded-md max-w-lg mx-auto shadow-lg">
-        {" "}
         {/* Container for the content */}
         {children} {/* Render the children components */}
       </div>
       <div className="max-w-lg mx-auto p-8 mt-2 text-center">
-        {" "}
         {/* Container for the footer */}
         <div
           className="font-bold text-sm text-white"

@@ -11,19 +11,7 @@ import {
 } from "../components";
 
 const Login = () => {
-  const {
-    isSignInLoaded,
-    isSessionLoaded,
-    isUserLoaded,
-    error,
-    setError,
-    loading,
-    login,
-    strategy,
-    setStrategy,
-    modal,
-    setModal,
-  } = useLogin();
+  const { login, setCurrentUser, currentUser } = useLogin();
 
   const {
     register,
@@ -32,22 +20,44 @@ const Login = () => {
   } = useForm({ mode: "all" });
 
   // Show loading indicator until sign-in, session, and user data are loaded
-  if (!isSignInLoaded || !isSessionLoaded || !isUserLoaded) {
+  if (!currentUser) {
     return <Loading />;
   }
 
   return (
     <AuthLayout>
-      {modal && (
+      {currentUser.metadata.modal && (
         <Modal
           message="Email with a magic link has been sent to your email."
           confirmText="Close"
           title="Magic Link Success"
-          onClose={() => setModal(false)}
+          onClose={() => {
+            setCurrentUser((prevState) => ({
+              ...prevState,
+              metadata: {
+                ...prevState.metadata,
+                modal: false,
+                strategy: "email_code",
+              },
+            }));
+          }}
         />
       )}
 
-      {error && <ErrorPopup message={error} onClose={() => setError(null)} />}
+      {currentUser.metadata.error && (
+        <ErrorPopup
+          message={currentUser.metadata.error}
+          onClose={() =>
+            setCurrentUser((prevState) => ({
+              ...prevState,
+              metadata: {
+                ...prevState.metadata,
+                error: null,
+              },
+            }))
+          }
+        />
+      )}
 
       <h2 className="text-2xl font-bold mb-8 text-center">Welcome Back!</h2>
 
@@ -55,12 +65,18 @@ const Login = () => {
         <FormInput
           id="email"
           name="email"
-          type="text"
-          placeholder={strategy === "email_link" ? "Email" : "Username/ Email"}
+          type={
+            currentUser.metadata.strategy === "email_link" ? "email" : "text"
+          }
+          placeholder={
+            currentUser.metadata.strategy === "email_link"
+              ? "Email"
+              : "Username/ Email"
+          }
           register={register}
           errors={errors}
         />
-        {strategy === "email_code" && (
+        {currentUser.metadata.strategy === "email_code" && (
           <FormInput
             id="password"
             name="password"
@@ -76,15 +92,23 @@ const Login = () => {
               id="checkbox"
               name="checkbox"
               type="checkbox"
-              checked={strategy === "email_link" ? true : false}
+              checked={
+                currentUser.metadata.strategy === "email_link" ? true : false
+              }
               className="mr-2 p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-purple-600"
               {...register("checkbox")}
               onChange={(e) =>
-                setStrategy(e.target.checked ? "email_link" : "email_code")
+                setCurrentUser((prevState) => ({
+                  ...prevState,
+                  metadata: {
+                    ...prevState.metadata,
+                    strategy: e.target.checked ? "email_link" : "email_code",
+                  },
+                }))
               }
             />
             <label htmlFor="checkbox" className="font-semibold">
-              Magic Link flow
+              Magic link method
             </label>
           </div>
           <div className="flex items-center">
@@ -97,7 +121,7 @@ const Login = () => {
           </div>
         </div>
 
-        <FormButton text="Login" loading={loading} />
+        <FormButton text="Login" loading={currentUser.metadata.loading} />
       </form>
 
       <div className="flex items-center justify-center border-t-2 border-gray-500 mt-12">
