@@ -9,9 +9,8 @@ const useErrorHandler = () => {
 
   // Function to handle errors by setting an appropriate error message in state.
   const handleErrors = (err) => {
-    const errorMessage = isClerkAPIResponseError(err)
-      ? err.errors[0].longMessage // Extract detailed message from Clerk API response error
-      : "An error occurred. Please try again later."; // Fallback error message for other errors
+    const errorMessage =
+      isClerkAPIResponseError(err) && err.errors[0].longMessage; // Extract detailed message from Clerk API response error
 
     // Update state with the error message
     setCurrentUser((prev) => ({

@@ -54,7 +54,7 @@ const useLogin = () => {
       setCurrentUser((prevState) => ({
         ...prevState,
         session: session.id,
-        username: user.username || user.firstName,
+        username: user.username,
         email:
           user.primaryEmailAddress?.emailAddress ||
           user.emailAddresses[0].emailAddress,
