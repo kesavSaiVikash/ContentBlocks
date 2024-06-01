@@ -1,5 +1,5 @@
 import React from "react";
-import { ReactComponent as closeIcon } from "../assets/astrix.svg";
+import { ReactComponent as CloseIcon } from "../assets/closeIcon.svg";
 
 // Reusable modal dialog component.
 
@@ -15,7 +15,7 @@ const Modal = ({
       <div className="modal-header">
         <h3 className="modal-title">{title}</h3>
         <button onClick={onClose} className="modal-close-button">
-          {closeIcon}
+          <CloseIcon />
         </button>
       </div>
       <div className="modal-body">
