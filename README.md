@@ -1,4 +1,6 @@
-**Setup Instructions**
+## ContentBlocks Auth App ReadMe:
+
+**Setup Instructions:**
 
 1. Clone the repository:
 
@@ -19,10 +21,10 @@
 
 ---
 
-**Project Overview**
+**Project Overview:**
 This project is a React-based web application using Clerk for authentication. It includes various pages and components, state management with Jotai, and custom hooks to handle authentication flows. The application is styled using a combination of custom CSS and Tailwind CSS.
 
-**Approach**
+**Approach:**
 
 1. Project Structure:
    The project is organized into the following directories:
@@ -49,7 +51,7 @@ This project is a React-based web application using Clerk for authentication. It
 
    Styling is achieved through a combination of Tailwind CSS and custom CSS. The custom CSS is wrapped around Tailwind classes for consistency and ease of use. Each component and page has its own scoped styles, ensuring modularity and maintainability.
 
-**Project Files**
+**Project Files:**
 
 1. Pages:
 
@@ -89,7 +91,7 @@ This project is a React-based web application using Clerk for authentication. It
    - index.js: Entry point rendering the app with the ClerkProvider.
    - .env.local: Local environment variables for configuring Clerk and authentication strategies.
 
-**Conclusion**
+**Conclusion:**
 
 This project demonstrates a modular and scalable approach to building a React application with user authentication.
 By leveraging Clerk for authentication, Jotai for state management, and React Router for navigation, the application is well-structured and easy to maintain.
