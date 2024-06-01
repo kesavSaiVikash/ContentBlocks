@@ -1,58 +1,96 @@
-# Setup Instructions :
+**Setup Instructions**
 
-**Clone the repository**:
+1. Clone the repository:
 
-- git clone https://github.com/kesavSaiVikash/ContentBlocks.git
-- cd ContentBlocks
+   - git clone https://github.com/kesavSaiVikash/ContentBlocks.git
+   - cd ContentBlocks
 
-**Install dependencies** :
+2. Install dependencies:
 
-- npm install
+   - npm install
 
-**Set up clerk** :
+3. Start development server:
 
-- Sign up for a Clerk account at https://clerk.com/
-- Create a new Clerk application and configure it according to your needs.
-- Copy your Clerk API Key and Clerk Frontend API Key.
-- Create a .env.local file in the root of your project and add your Clerk API keys:
+   - npm start
 
-**Start development server** :
+4. Open the app:
 
-- npm start
-
-**Open the app** :
-
-- Open http://localhost:3000 to view the app in your browser.
+   - Open http://localhost:3000 to view the app in your browser.
 
 ---
 
-# ContentBlocks Login Component
+**Project Overview**
+This project is a React-based web application using Clerk for authentication. It includes various pages and components, state management with Jotai, and custom hooks to handle authentication flows. The application is styled using a combination of custom CSS and Tailwind CSS.
 
-## Features
+**Approach**
 
-1. **Login Interface:**
+1. Project Structure:
+   The project is organized into the following directories:
 
-   - Username and password input fields.
-   - Form validation for input format.
-   - 'Forgot password' link.
-   - Option to switch to the magic link method for sign in.
+   - pages: Contains the main pages of the application (e.g., Login, Register, Home, ForgotPassword).
+   - components: Reusable components used across different pages (e.g., Navbar, Loading, AuthLayout, ErrorMessage, ErrorPopup, FormInput, FormButton, ProtectedRoute).
+   - custom_hooks: Custom hooks to encapsulate and manage logic for authentication and other features (e.g., useLogin, useRegister, useForgotPassword, useLogout, useErrorHandler).
+   - utils: Utilities such as global state management using Jotai.
+   - assets: Contains static assets like images and icons.
 
-2. **Registration Interface:**
+2. State Management:
 
-   - Username, email, and password input fields.
-   - Password strength feedback.
-   - Input validation for form errors.
-   - Option to switch to the magic link method for sign out.
+   State management is handled using Jotai. The currentUserAtom is a global state that holds the current user's data and metadata. This atom is used across different components and custom hooks to ensure consistency and reactivity in state updates.
 
-3. **State Management:**
+3. Authentication:
 
-   - Used Jotai for state management of authentication processes like session, username, email, error popups, loading, modal.
-   - Used can take a look at the utils/store.js file to see the structure of all my states that are used in the app.
-   - Used react-hoo-form's useForm for managing the form fields data abd validation.
+   Clerk is used for managing user authentication. The application supports various authentication strategies (email code, email link, password reset) configured through environment variables. Custom hooks (useLogin, useRegister, useForgotPassword, useLogout) encapsulate the logic for these authentication flows, ensuring a clean and maintainable approach.
 
-4. **Security Features:**
+4. Routing:
 
-   - Demonstrated password hashing process on useLogin page.
+   React Router is used for client-side routing. The ProtectedRoute component ensures that routes requiring authentication are protected and redirect unauthenticated users to the login page.
 
-5. **Responsive Design:**
-   - Used Responsive forms styled with Tailwind CSS to match the existing application's style.
+5. Styling:
+
+   Styling is achieved through a combination of Tailwind CSS and custom CSS. The custom CSS is wrapped around Tailwind classes for consistency and ease of use. Each component and page has its own scoped styles, ensuring modularity and maintainability.
+
+**Project Files**
+
+1. Pages:
+
+   - Login: The login page allowing users to authenticate.
+   - Register: The registration page for new users.
+   - Home: The main landing page for authenticated users.
+   - ForgotPassword: The page for password recovery.
+
+2. Components:
+
+   - AuthLayout: Layout component used for authentication-related pages.
+   - ErrorMessage: Component for displaying error messages dynamically.
+   - ErrorPopup: Popup component for error notifications with close functionality.
+   - FormInput: Form input component with error handling.
+   - FormButton: Button component with loading state handling.
+   - Loading: Component displaying a loading spinner and text.
+   - Navbar: Navigation bar component with a logo and logout functionality.
+   - Modal: Reusable modal dialog component.
+   - ProtectedRoute: Higher-order component for protecting routes.
+
+3. Custom Hooks:
+
+   - useLogin: Manages login flow.
+   - useRegister: Handles user registration and email verification.
+   - useForgotPassword: Manages password reset requests and verification.
+   - useLogout: Handles user logout.
+   - useErrorHandler: Centralized error handling for async operations.
+
+   **Note:**
+
+   - passwordHashingDemo: A demonstration of how to do password hashing if we have a custom server between frontend and clerk.
+   - This file in custom_hooks/passwordHashingDemo.js is only for demonstration purposes and have not been used anywhere in the project.
+
+4. Configuration Files:
+
+   - App.js: Main application component configuring routes and wrapping them in necessary providers.
+   - index.js: Entry point rendering the app with the ClerkProvider.
+   - .env.local: Local environment variables for configuring Clerk and authentication strategies.
+
+**Conclusion**
+
+This project demonstrates a modular and scalable approach to building a React application with user authentication.
+By leveraging Clerk for authentication, Jotai for state management, and React Router for navigation, the application is well-structured and easy to maintain.
+The use of custom hooks encapsulates business logic, promoting reusability and separation of concerns.

@@ -1,14 +1,17 @@
 import { useSignIn } from "@clerk/clerk-react";
 import { useAtom } from "jotai";
 import { currentUserAtom } from "../utils/store";
+import { useErrorHandler } from "../custom_hooks";
+
+// Custom hook for handling forgot password functionality.
 
 const useForgotPassword = () => {
-  const { signIn } = useSignIn();
-  const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
+  const { signIn } = useSignIn(); // Clerk hook for signing in
+  const [currentUser, setCurrentUser] = useAtom(currentUserAtom); // State management with Jotai
+  const { handleErrors, handleCompletion } = useErrorHandler(); // Custom error handling hook
 
-  // Function to request a password reset.
+  // Function to request password reset.
   const requestPasswordReset = async (email) => {
-    // Set loading state and reset other metadata.
     setCurrentUser((prev) => ({
       ...prev,
       metadata: {
@@ -19,15 +22,11 @@ const useForgotPassword = () => {
         modal: false,
       },
     }));
-
     try {
-      // Send password reset email.
       await signIn.create({
         strategy: process.env.REACT_APP_STRATEGY_PASSWORD_RESET,
         identifier: email,
       });
-
-      // Update metadata after successful request.
       setCurrentUser((prev) => ({
         ...prev,
         metadata: {
@@ -37,21 +36,13 @@ const useForgotPassword = () => {
         },
       }));
     } catch (err) {
-      // Handle errors.
-      const errorMessage =
-        err?.errors?.[0]?.longMessage || "An unknown error occurred.";
-      setCurrentUser((prev) => ({
-        ...prev,
-        metadata: {
-          ...prev.metadata,
-          loading: false,
-          error: errorMessage,
-        },
-      }));
+      handleErrors(err);
+    } finally {
+      handleCompletion(); // Finalize
     }
   };
 
-  // Function to verify reset code and set new password.
+  // Function to verify reset code and set a new password.
   const verifyResetCode = async (code, password) => {
     setCurrentUser((prev) => ({
       ...prev,
@@ -63,14 +54,12 @@ const useForgotPassword = () => {
         modal: false,
       },
     }));
-
     try {
       const result = await signIn.attemptFirstFactor({
         strategy: process.env.REACT_APP_STRATEGY_PASSWORD_RESET,
         code,
         password,
       });
-
       if (result.status === "complete") {
         setCurrentUser((prev) => ({
           ...prev,
@@ -82,20 +71,12 @@ const useForgotPassword = () => {
         }));
       }
     } catch (err) {
-      const errorMessage =
-        err?.errors?.[0]?.longMessage || "An unknown error occurred.";
-      setCurrentUser((prev) => ({
-        ...prev,
-        metadata: {
-          ...prev.metadata,
-          loading: false,
-          error: errorMessage,
-        },
-      }));
+      handleErrors(err);
+    } finally {
+      handleCompletion(); // Finalize
     }
   };
 
-  // Return the necessary functions and state for password reset.
   return {
     requestPasswordReset,
     verifyResetCode,

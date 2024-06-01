@@ -1,11 +1,13 @@
 import React from "react";
 
-// Loading component with a spinner and text.
+// Loading component that displays a spinner and a loading text.
 
 const Loading = () => {
   return (
     <div className="loading-overlay">
+      {/* Spinner for visual indication of loading */}
       <div className="loading-spinner"></div>
+      {/* Loading text displayed below the spinner */}
       <p className="loading-text">Loading...</p>
     </div>
   );

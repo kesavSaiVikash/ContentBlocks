@@ -1,12 +1,13 @@
-import "./index.css"; // Custom CSS classes wrapped around the Tailwind css styles for all the components.
+import "./index.css"; // Custom CSS classes wrapped around Tailwind CSS styles specifically for all components
 
-// Exports of Components
-export { default as AuthLayout } from "./AuthLayout";
-export { default as ErrorMessage } from "./ErrorMessage";
-export { default as ErrorPopup } from "./ErrorPopup";
-export { default as Loading } from "./Loading";
-export { default as Navbar } from "./Navbar";
-export { default as Modal } from "./Modal";
-export { default as FormInput } from "./FormInput";
-export { default as FormButton } from "./FormButton";
-export { default as ProtectedRoute } from "./ProtectedRoute";
+// Exporting all COMPONENTS for easier import in other parts of the application
+
+export { default as AuthLayout } from "./AuthLayout"; // Layout component for authentication pages
+export { default as ErrorMessage } from "./ErrorMessage"; // Component to display error messages
+export { default as ErrorPopup } from "./ErrorPopup"; // Component to display error popups with a close button
+export { default as Loading } from "./Loading"; // Loading spinner component
+export { default as Navbar } from "./Navbar"; // Navbar component for navigation
+export { default as Modal } from "./Modal"; // Modal component for displaying modals
+export { default as FormInput } from "./FormInput"; // Input field component with error handling for forms
+export { default as FormButton } from "./FormButton"; // Button component for forms with loading state handling
+export { default as ProtectedRoute } from "./ProtectedRoute"; // Component to protect routes, only accessible when authenticated

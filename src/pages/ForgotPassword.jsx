@@ -1,86 +1,81 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { useForgotPassword, useLogout } from "../custom_hooks";
-import { ReactComponent as Astrix } from "../assets/astrix.svg";
+import { useNavigate } from "react-router-dom"; // Importing useNavigate for navigation
+import { useForm } from "react-hook-form"; // Importing useForm for form handling
+import { useForgotPassword, useLogout } from "../custom_hooks"; // Importing custom hooks for forgot password and logout
+import { ReactComponent as Astrix } from "../assets/astrix.svg"; // Importing an SVG component
+
 import {
   AuthLayout,
   ErrorPopup,
   Modal,
   FormInput,
   FormButton,
-} from "../components";
+} from "../components"; // Importing required components
 
 const ForgotPasswordPage = () => {
-  // Hooks for navigation, form handling, and custom authentication logic
-  const navigate = useNavigate();
-  const { handleLogout } = useLogout();
+  const navigate = useNavigate(); // Hook for navigation
+  const { handleLogout } = useLogout(); // Destructuring handleLogout function from useLogout hook
   const { requestPasswordReset, verifyResetCode, currentUser, setCurrentUser } =
-    useForgotPassword();
-
-  // Form handling with react-hook-form
+    useForgotPassword(); // Destructuring necessary functions and state from useForgotPassword hook
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({ mode: "all" });
+  } = useForm({ mode: "all" }); // Form handling and validation setup
 
-  // Form submission logic
+  // Function to handle form submission
   const onSubmit = async (data) => {
-    reset();
+    reset(); // Reset the form
     if (!currentUser.metadata.emailSent) {
-      await requestPasswordReset(data.email);
+      await requestPasswordReset(data.email); // Request password reset if email not sent
     } else {
       try {
-        await verifyResetCode(data.code, data.password);
+        await verifyResetCode(data.code, data.password); // Verify reset code if email sent
       } catch (err) {
-        console.error("Password reset failed", err);
+        console.error("Password reset failed", err); // Log error if password reset fails
       }
     }
   };
 
   return (
-    // Layout component for authentication pages
     <AuthLayout>
+      {/* Display modal if the password reset is successful */}
       {currentUser.metadata.modal && (
-        // Modal component for showing messages
         <Modal
           message="Password reset successful. Please log in with your new password."
           confirmText="Login Back"
           onConfirm={() => {
-            handleLogout();
+            handleLogout(); // Log out the user
             setCurrentUser((prevState) => ({
               ...prevState,
-              metadata: { ...prevState.metadata, modal: false },
+              metadata: { ...prevState.metadata, modal: false }, // Close the modal
             }));
-            navigate("/login");
+            navigate("/login"); // Navigate to login page
           }}
           onClose={() => {
-            handleLogout();
+            handleLogout(); // Log out the user
             setCurrentUser((prevState) => ({
               ...prevState,
-              metadata: { ...prevState.metadata, modal: false },
+              metadata: { ...prevState.metadata, modal: false }, // Close the modal
             }));
-            navigate("/login");
+            navigate("/login"); // Navigate to login page
           }}
           title="Password Reset"
         />
       )}
-
+      {/* Display error popup if there's an error */}
       {currentUser.metadata.error && (
-        // ErrorPopup component for displaying errors
         <ErrorPopup
           message={currentUser.metadata.error}
           onClose={() =>
             setCurrentUser((prevState) => ({
               ...prevState,
-              metadata: { ...prevState.metadata, error: null },
+              metadata: { ...prevState.metadata, error: null }, // Clear the error
             }))
           }
         />
       )}
-
       <div className="forgot-password-container">
         <h2 className="forgot-password-title">Forgot Password?</h2>
         <form
@@ -88,8 +83,8 @@ const ForgotPasswordPage = () => {
           className="forgot-password-form"
           autoComplete="off"
         >
+          {/* Conditionally render inputs based on emailSent status */}
           {!currentUser.metadata.emailSent ? (
-            // Form fields for requesting password reset code
             <>
               <FormInput
                 id="email"
@@ -105,7 +100,6 @@ const ForgotPasswordPage = () => {
               />
             </>
           ) : (
-            // Form fields for entering reset code and new password
             <>
               <FormInput
                 id="password"
@@ -129,7 +123,6 @@ const ForgotPasswordPage = () => {
               />
             </>
           )}
-
           <div className="forgot-password-footer">
             <Astrix />
             <span className="font-bold">
