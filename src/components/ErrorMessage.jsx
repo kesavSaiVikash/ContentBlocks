@@ -1,11 +1,12 @@
-import React from "react";
+import React from "react"; // Importing React for creating components
 
-// This is a dynamic error message component where message is passed as a prop,
-// so basically this component can be imported & called on any page of our project with dynamic message prop.
+// This is a dynamic error message component where the message is passed as a prop
+// This component can be imported and used on any page of the project with a dynamic message prop
 
 const ErrorMessage = ({ message }) => {
   return (
     <div className="error-container" role="alert">
+      {/* Display the error message passed as a prop */}
       <span className="error-message">{message}</span>
     </div>
   );

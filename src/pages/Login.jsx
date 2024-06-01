@@ -1,6 +1,6 @@
 import React from "react";
-import { useForm } from "react-hook-form";
-import { useLogin } from "../custom_hooks";
+import { useForm } from "react-hook-form"; // Importing useForm hook from react-hook-form for form handling
+import { useLogin } from "../custom_hooks"; // Importing custom login hook
 import {
   Loading,
   AuthLayout,
@@ -8,46 +8,46 @@ import {
   FormInput,
   FormButton,
   Modal,
-} from "../components"; // Importing components for the login page
+} from "../components"; // Importing required components
 
 const Login = () => {
-  const { login, setCurrentUser, currentUser } = useLogin(); // Using custom hook for login functionality
+  // Destructuring login, setCurrentUser, and currentUser from the useLogin custom hook
+  const { login, setCurrentUser, currentUser } = useLogin();
 
+  // Destructuring methods and state from useForm hook for form handling
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ mode: "all" }); // Setting up form with react-hook-form
+  } = useForm({ mode: "all" });
 
-  // If currentUser is not loaded yet, show loading indicator
+  // If currentUser is not yet defined (likely still loading), display loading component
   if (!currentUser) {
     return <Loading />;
   }
 
   return (
     <AuthLayout>
+      {/* Display a modal if the user has been sent a magic link */}
       {currentUser.metadata.modal && (
-        // Show modal if modal flag is set in currentUser metadata
         <Modal
           message="Email with a magic link has been sent to your email."
           confirmText="Close"
           title="Magic Link Success"
           onClose={() => {
-            // Close modal and update currentUser metadata
             setCurrentUser((prevState) => ({
               ...prevState,
               metadata: {
                 ...prevState.metadata,
                 modal: false,
-                strategy: process.env.REACT_APP_STRATEGY_EMAIL_CODE,
+                strategy: process.env.REACT_APP_STRATEGY_EMAIL_CODE, // Reset strategy after closing modal
               },
             }));
           }}
         />
       )}
-
+      {/* Display an error popup if there's an error in the currentUser metadata */}
       {currentUser.metadata.error && (
-        // Show error popup if error flag is set in currentUser metadata
         <ErrorPopup
           message={currentUser.metadata.error}
           onClose={() =>
@@ -55,17 +55,16 @@ const Login = () => {
               ...prevState,
               metadata: {
                 ...prevState.metadata,
-                error: null,
+                error: null, // Clear the error on closing the popup
               },
             }))
           }
         />
       )}
-
       <h2 className="login-title">Welcome Back!</h2>
-
+      {/* Form submission is handled by handleSubmit which wraps the login function */}
       <form className="login-form" onSubmit={handleSubmit(login)}>
-        {/* Form input for email or username */}
+        {/* Input for email or username depending on the login strategy */}
         <FormInput
           id="email"
           name="email"
@@ -84,7 +83,7 @@ const Login = () => {
           register={register}
           errors={errors}
         />
-        {/* Form input for password, shown only if using email code strategy */}
+        {/* If the login strategy is email code, display the password input */}
         {currentUser.metadata.strategy ===
           process.env.REACT_APP_STRATEGY_EMAIL_CODE && (
           <FormInput
@@ -96,9 +95,9 @@ const Login = () => {
             errors={errors}
           />
         )}
-        {/* Checkbox for selecting magic link method */}
         <div className="flex justify-between items-center">
           <div className="flex items-center">
+            {/* Checkbox for toggling the magic link method */}
             <input
               id="checkbox"
               name="checkbox"
@@ -116,7 +115,7 @@ const Login = () => {
                     ...prevState.metadata,
                     strategy: e.target.checked
                       ? process.env.REACT_APP_STRATEGY_EMAIL_LINK
-                      : process.env.REACT_APP_STRATEGY_EMAIL_CODE,
+                      : process.env.REACT_APP_STRATEGY_EMAIL_CODE, // Toggle strategy based on checkbox state
                   },
                 }))
               }
@@ -131,17 +130,13 @@ const Login = () => {
             </a>
           </div>
         </div>
-
-        {/* Login button */}
+        {/* Submit button for the login form */}
         <FormButton text="Login" loading={currentUser.metadata.loading} />
       </form>
-
-      {/* Divider */}
       <div className="divider">
         <h2 className="divider-text">OR</h2>
       </div>
       <div className="mt-4 text-center">
-        {/* Get started section */}
         <div className="get-started-title">Get Started with ContentBlocks</div>
         <a className="get-started-button" href="/register">
           Create Your Account

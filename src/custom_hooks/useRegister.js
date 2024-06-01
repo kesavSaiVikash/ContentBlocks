@@ -1,18 +1,20 @@
 import { useSignUp } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
-import { isClerkAPIResponseError } from "@clerk/clerk-react/errors";
 import { currentUserAtom } from "../utils/store";
+import { useErrorHandler } from "../custom_hooks";
 import { useAtom } from "jotai";
 
+// Custom hook for registration functionality.
+
 const useRegister = () => {
-  const navigate = useNavigate();
-  const { isLoaded, signUp, setActive } = useSignUp();
-  const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
+  const navigate = useNavigate(); // For navigation
+  const { isLoaded, signUp, setActive } = useSignUp(); // Clerk hooks for signing up and setting active session
+  const [currentUser, setCurrentUser] = useAtom(currentUserAtom); // State management with Jotai
+  const { handleErrors, handleCompletion } = useErrorHandler(); // Custom error handling hook
 
   // Function to register a new user.
   const registerUser = async (data, strategy) => {
     if (!isLoaded || currentUser.metadata.loading) return;
-
     setCurrentUser((prev) => ({
       ...prev,
       metadata: {
@@ -21,28 +23,13 @@ const useRegister = () => {
         error: null,
       },
     }));
-
     try {
-      // Create a new user account.
       await signUp.create({
         username: data.username,
         email_address: data.email,
         password: data.password,
       });
-
-      // Prepare email address verification based on the selected strategy.
       switch (strategy) {
-        case process.env.REACT_APP_STRATEGY_EMAIL_CODE:
-          await signUp.prepareEmailAddressVerification({ strategy });
-          setCurrentUser((prev) => ({
-            ...prev,
-            metadata: {
-              ...prev.metadata,
-              pendingVerification: true,
-            },
-          }));
-          break;
-
         case process.env.REACT_APP_STRATEGY_EMAIL_LINK:
           await signUp.prepareEmailAddressVerification({
             strategy,
@@ -56,12 +43,16 @@ const useRegister = () => {
             },
           }));
           break;
-
         default:
-          console.error("Unknown verification strategy:", strategy);
+          await signUp.prepareEmailAddressVerification({ strategy });
+          setCurrentUser((prev) => ({
+            ...prev,
+            metadata: {
+              ...prev.metadata,
+              pendingVerification: true,
+            },
+          }));
       }
-
-      // Update currentUserAtom with the new user's details.
       setCurrentUser((prev) => ({
         ...prev,
         session: null,
@@ -69,34 +60,15 @@ const useRegister = () => {
         email: data.email,
       }));
     } catch (err) {
-      // Handle errors.
-      const errorMessage = isClerkAPIResponseError(err)
-        ? err.errors[0].longMessage
-        : "An error occurred. Please try again later.";
-
-      setCurrentUser((prev) => ({
-        ...prev,
-        metadata: {
-          ...prev.metadata,
-          error: errorMessage,
-        },
-      }));
+      handleErrors(err);
     } finally {
-      // Set loading to false when registration process is completed.
-      setCurrentUser((prev) => ({
-        ...prev,
-        metadata: {
-          ...prev.metadata,
-          loading: false,
-        },
-      }));
+      handleCompletion(); // Finalize
     }
   };
 
-  // Function to verify email address after registration.
+  // Function to verify email after registration.
   const verifyEmail = async (data) => {
     if (!isLoaded || currentUser.metadata.loading) return;
-
     setCurrentUser((prev) => ({
       ...prev,
       metadata: {
@@ -105,40 +77,21 @@ const useRegister = () => {
         error: null,
       },
     }));
-
     try {
-      // Attempt email address verification.
       const completeSignUp = await signUp.attemptEmailAddressVerification({
         code: data.code,
       });
-
-      // Redirect to home page if verification is successful.
-      if (completeSignUp.status === "complete" || "needs_first_factor") {
+      if (
+        completeSignUp.status === "complete" ||
+        completeSignUp.status === "needs_first_factor"
+      ) {
         await setActive({ session: completeSignUp.createdSessionId });
-        navigate("/");
+        navigate("/"); // Navigate to home after successful verification
       }
     } catch (err) {
-      // Handle errors
-      const errorMessage = isClerkAPIResponseError(err)
-        ? err.errors[0].longMessage
-        : "An error occurred. Please try again later.";
-
-      setCurrentUser((prev) => ({
-        ...prev,
-        metadata: {
-          ...prev.metadata,
-          error: errorMessage,
-        },
-      }));
+      handleErrors(err);
     } finally {
-      // Set loading to false when verification process is completed.
-      setCurrentUser((prev) => ({
-        ...prev,
-        metadata: {
-          ...prev.metadata,
-          loading: false,
-        },
-      }));
+      handleCompletion(); // Finalize
     }
   };
 

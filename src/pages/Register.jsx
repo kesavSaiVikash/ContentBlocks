@@ -1,50 +1,48 @@
 import React from "react";
-import { useAtom } from "jotai";
-import { useForm } from "react-hook-form";
-import { useRegister } from "../custom_hooks";
-import { useNavigate } from "react-router-dom";
-import { currentUserAtom } from "../utils/store";
-import { ReactComponent as Astrix } from "../assets/astrix.svg";
+import { useAtom } from "jotai"; // Importing useAtom from jotai for state management
+import { useForm } from "react-hook-form"; // Importing useForm from react-hook-form for form handling
+import { useRegister } from "../custom_hooks"; // Importing custom register hook
+import { useNavigate } from "react-router-dom"; // Importing useNavigate for navigation
+import { currentUserAtom } from "../utils/store"; // Importing atom for current user state
+import { ReactComponent as Astrix } from "../assets/astrix.svg"; // Importing an SVG component
+
 import {
   AuthLayout,
   ErrorPopup,
   FormButton,
   FormInput,
   Modal,
-} from "../components"; // Importing components for the registration page
+} from "../components"; // Importing required components
 
 const RegisterPage = () => {
-  const navigate = useNavigate();
-  const [currentUser, setCurrentUser] = useAtom(currentUserAtom); // Using Jotai for current user state
-
-  const { registerUser, verifyEmail } = useRegister();
-
+  const navigate = useNavigate(); // Hook for navigation
+  const [currentUser, setCurrentUser] = useAtom(currentUserAtom); // State management for current user
+  const { registerUser, verifyEmail } = useRegister(); // Destructuring register and verifyEmail functions from useRegister hook
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({ mode: "all" }); // Setting up form with react-hook-form
+  } = useForm({ mode: "all" }); // Form handling and validation setup
 
-  // Close modal and navigate to home page
+  // Function to handle closing the modal
   const handleCloseModal = () => {
-    navigate("/");
-    reset();
+    navigate("/"); // Navigate to the home page
+    reset(); // Reset the form
     setCurrentUser((prev) => ({
       ...prev,
       metadata: {
         ...prev.metadata,
-        modal: false,
+        modal: false, // Close the modal
       },
     }));
   };
 
-  // Show verification form if account verification is pending
+  // If the user is pending verification, show the verification form
   if (currentUser.metadata.pendingVerification) {
     return (
       <AuthLayout>
         {currentUser.metadata.error && (
-          // Show error popup if error flag is set in currentUser metadata
           <ErrorPopup
             message={currentUser.metadata.error}
             onClose={() =>
@@ -52,7 +50,7 @@ const RegisterPage = () => {
                 ...prev,
                 metadata: {
                   ...prev.metadata,
-                  error: null,
+                  error: null, // Clear the error
                 },
               }))
             }
@@ -60,7 +58,6 @@ const RegisterPage = () => {
         )}
         <h2 className="verify-title">Verify your account</h2>
         <form onSubmit={handleSubmit(verifyEmail)} className="space-y-6">
-          {/* Form input for verification code */}
           <FormInput
             id="code"
             name="code"
@@ -69,7 +66,6 @@ const RegisterPage = () => {
             register={register}
             errors={errors}
           />
-          {/* Verify email button */}
           <FormButton
             text="Verify Email"
             loading={currentUser.metadata.loading}
@@ -79,11 +75,9 @@ const RegisterPage = () => {
     );
   }
 
-  // Show registration form
   return (
     <AuthLayout>
       {currentUser.metadata.error && (
-        // Show error popup if error flag is set in currentUser metadata
         <ErrorPopup
           message={currentUser.metadata.error}
           onClose={() =>
@@ -91,15 +85,13 @@ const RegisterPage = () => {
               ...prev,
               metadata: {
                 ...prev.metadata,
-                error: null,
+                error: null, // Clear the error
               },
             }))
           }
         />
       )}
-
       {currentUser.metadata.modal && (
-        // Show modal if modal flag is set in currentUser metadata
         <Modal
           title="Email Sent"
           message="Please check your email for the verification link."
@@ -107,26 +99,23 @@ const RegisterPage = () => {
           confirmText="Close"
         />
       )}
-
       <h2 className="register-title">Create Your Account</h2>
-
       <form
         onSubmit={handleSubmit((data) =>
           registerUser(data, currentUser.metadata.strategy)
         )}
         className="space-y-6"
       >
-        {/* Form inputs for username, email, and password */}
+        {/* Loop through the fields to generate form inputs dynamically */}
         {["username", "email", "password"].map((field) => {
           const fieldName = field.charAt(0).toUpperCase() + field.slice(1);
           const isPasswordField = field === "password";
           const inputType = isPasswordField
             ? "password"
             : field === "email"
-            ? field
+            ? "email"
             : "text";
           const placeholder = fieldName;
-
           return (
             <FormInput
               key={field}
@@ -139,9 +128,8 @@ const RegisterPage = () => {
             />
           );
         })}
-
-        {/* Checkbox for selecting magic link method */}
         <div className="flex items-center">
+          {/* Checkbox for toggling the magic link method */}
           <input
             id="checkbox"
             name="checkbox"
@@ -159,7 +147,7 @@ const RegisterPage = () => {
                   ...prev.metadata,
                   strategy: e.target.checked
                     ? process.env.REACT_APP_STRATEGY_EMAIL_LINK
-                    : process.env.REACT_APP_STRATEGY_EMAIL_CODE,
+                    : process.env.REACT_APP_STRATEGY_EMAIL_CODE, // Toggle strategy based on checkbox state
                 },
               }))
             }
@@ -168,11 +156,7 @@ const RegisterPage = () => {
             Magic link method
           </label>
         </div>
-
-        {/* Sign up button */}
         <FormButton text="Sign Up" loading={currentUser.metadata.loading} />
-
-        {/* Footer */}
         <div className="register-footer">
           <Astrix />
           <span className="font-bold">

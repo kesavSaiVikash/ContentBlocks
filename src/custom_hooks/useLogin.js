@@ -2,29 +2,28 @@ import { useEffect } from "react";
 import { useAtom } from "jotai";
 import { useNavigate } from "react-router-dom";
 import { useSignIn, useSession, useUser } from "@clerk/clerk-react";
-import { isClerkAPIResponseError } from "@clerk/clerk-react/errors";
 import { currentUserAtom } from "../utils/store";
+import { useErrorHandler } from "../custom_hooks";
 
-// Import bcrypt for password hashing simulation.
-// import bcrypt from "bcryptjs";
+// Custom hook for login functionality.
 
 const useLogin = () => {
-  const navigate = useNavigate();
-  const { signIn, setActive } = useSignIn();
-  const { isLoaded: isSessionLoaded, session } = useSession();
-  const { isLoaded: isUserLoaded, user } = useUser();
-  const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
+  const navigate = useNavigate(); // For navigation
+  const { signIn, setActive } = useSignIn(); // Clerk hooks for signing in and setting active session
+  const { isLoaded: isSessionLoaded, session } = useSession(); // Clerk hook for session information
+  const { isLoaded: isUserLoaded, user } = useUser(); // Clerk hook for user information
+  const [currentUser, setCurrentUser] = useAtom(currentUserAtom); // State management with Jotai
+  const { handleErrors, handleCompletion } = useErrorHandler(); // Custom error handling hook
 
-  // useEffect to handle redirection and updating currentUser on session and user load.
+  // Effect to set initial strategy and update user info if session and user data are loaded.
   useEffect(() => {
     setCurrentUser((prevState) => ({
       ...prevState,
       metadata: {
         ...prevState.metadata,
-        strategy: process.env.REACT_APP_STRATEGY_EMAIL_CODE,
+        strategy: process.env.REACT_APP_STRATEGY_EMAIL_CODE, // Default strategy
       },
     }));
-
     if (isSessionLoaded && session && isUserLoaded && user) {
       setCurrentUser((prevState) => ({
         ...prevState,
@@ -32,17 +31,13 @@ const useLogin = () => {
         username: user.username,
         email: user.primaryEmailAddress?.emailAddress,
       }));
-
-      navigate("/");
+      navigate("/"); // Navigate to home after login
     }
   }, [isSessionLoaded, session, isUserLoaded, user, navigate, setCurrentUser]);
 
-  // Handle sign-in process after creating the sign-in attempt.
+  // Function to handle the sign-in process.
   const handleSignIn = async (completeSignIn) => {
-    if (
-      completeSignIn.status === "needs_first_factor" ||
-      completeSignIn.status === "complete"
-    ) {
+    try {
       if (
         currentUser.metadata.strategy ===
         process.env.REACT_APP_STRATEGY_EMAIL_LINK
@@ -55,14 +50,7 @@ const useLogin = () => {
           },
         }));
       }
-
       await setActive({ session: completeSignIn.createdSessionId });
-
-      // Wait for user to be loaded before updating stored session and user.
-      while (!isUserLoaded) {
-        await new Promise((resolve) => setTimeout(resolve, 100));
-      }
-
       setCurrentUser((prevState) => ({
         ...prevState,
         session: session.id,
@@ -71,22 +59,17 @@ const useLogin = () => {
           user.primaryEmailAddress?.emailAddress ||
           user.emailAddresses[0].emailAddress,
       }));
-
-      navigate("/");
+      navigate("/"); // Navigate to home after setting active session
+    } catch (err) {
+      handleErrors(err); // Handle errors
+    } finally {
+      handleCompletion(); // Finalize
     }
   };
 
-  // Demonstrating the process of how to perform password hashing using bcryptjs.
-
-  // const simulatePasswordHashing = (password) => {
-  //   const salt = bcrypt.genSaltSync(10);
-  //   return bcrypt.hashSync(password, salt);
-  // };
-
-  // Perform sign-in based on the selected strategy
+  // Function to handle login.
   const login = async (data) => {
     if (currentUser.metadata.loading) return;
-
     try {
       setCurrentUser((prevState) => ({
         ...prevState,
@@ -96,7 +79,6 @@ const useLogin = () => {
           error: null,
         },
       }));
-
       let completeSignIn;
       switch (currentUser.metadata.strategy) {
         case process.env.REACT_APP_STRATEGY_EMAIL_LINK:
@@ -106,40 +88,18 @@ const useLogin = () => {
             strategy: process.env.REACT_APP_STRATEGY_EMAIL_LINK,
           });
           break;
-
         default:
-          // Simulate password hashing before sending to Clerk.
-
-          // const hashedPassword = simulatePasswordHashing(data.password);
-          // Now we pass this hashed password in the password field of sign in function in our custom server.
-
           completeSignIn = await signIn.create({
             identifier: data.email,
             password: data.password,
           });
           break;
       }
-
-      await handleSignIn(completeSignIn);
+      await handleSignIn(completeSignIn); // Complete sign-in process
     } catch (err) {
-      const errorMessage =
-        isClerkAPIResponseError(err) && err.errors[0].longMessage;
-
-      setCurrentUser((prevState) => ({
-        ...prevState,
-        metadata: {
-          ...prevState.metadata,
-          error: errorMessage,
-        },
-      }));
+      handleErrors(err); // Handle errors
     } finally {
-      setCurrentUser((prevState) => ({
-        ...prevState,
-        metadata: {
-          ...prevState.metadata,
-          loading: false,
-        },
-      }));
+      handleCompletion(); // Finalize
     }
   };
 

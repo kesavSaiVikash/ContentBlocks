@@ -2,38 +2,51 @@ import { useClerk } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import { currentUserAtom } from "../utils/store";
 import { useAtom } from "jotai";
+import { useErrorHandler } from "../custom_hooks";
 
-// Custom hook for handling user logout functionality.
+// Custom hook for handling user logout.
+
 const useLogout = () => {
-  const { signOut } = useClerk();
-  const navigate = useNavigate();
-  const [, setCurrentUser] = useAtom(currentUserAtom);
+  const { signOut } = useClerk(); // Clerk hook for signing out
+  const navigate = useNavigate(); // React Router hook for navigation
+  const [, setCurrentUser] = useAtom(currentUserAtom); // State management with Jotai
+  const { handleErrors, handleCompletion } = useErrorHandler(); // Custom error handling hook
 
-  // Handle user logout
+  // Function to handle user logout.
   const handleLogout = async () => {
-    setCurrentUser((prev) => ({
-      ...prev,
-      metadata: {
-        ...prev.metadata,
-        loading: true,
-      },
-    })); // Set loading to true in currentUserAtom.
+    try {
+      // Set loading state before starting the logout process
+      setCurrentUser((prev) => ({
+        ...prev,
+        metadata: {
+          ...prev.metadata,
+          loading: true,
+        },
+      }));
 
-    await signOut(); // Sign out the user
+      // Call Clerk's signOut function to log out the user
+      await signOut();
 
-    setCurrentUser((prev) => ({
-      ...prev,
-      metadata: {
-        ...prev.metadata,
-        loading: false,
-      },
-    })); // Set loading to false in currentUserAtom.
+      // Update state to reflect the user is no longer loading
+      setCurrentUser((prev) => ({
+        ...prev,
+        metadata: {
+          ...prev.metadata,
+          loading: false,
+        },
+      }));
 
-    navigate("/login"); // Redirect to the login page.
+      // Redirect user to the login page after logout
+      navigate("/login");
+    } catch (err) {
+      handleErrors(err); // Handle any errors that occur during logout
+    } finally {
+      handleCompletion(); // Finalize the logout process
+    }
   };
 
   return {
-    handleLogout,
+    handleLogout, // Return the handleLogout function for use in components
   };
 };
 
