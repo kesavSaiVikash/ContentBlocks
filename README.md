@@ -101,3 +101,23 @@ This project is a React-based web application using Clerk for authentication. It
 
 This project demonstrates a modular and scalable approach to building a React application with user authentication.
 By leveraging Clerk for authentication, Jotai for state management, and React Router for navigation, the application is well-structured and easy to maintain. The use of custom hooks encapsulates business logic, promoting reusability and separation of concerns.
+
+---
+
+**Future Upgrades**
+
+1. **Adding Social Logins with Clerk API:**
+   Integrating social login functionality using Clerk API can improve user convenience and accessibility. Users can choose to log in with their existing social media accounts, such as Google, Facebook, Twitter and etc providing a seamless authentication experience.
+
+2. **Developing a Content Blocks Admin Portal:**
+   Creating a custom admin portal leveraging Clerk's admin functionality can provide a centralized interface for managing users, permissions, and other administrative tasks related to the application. This portal is similar to Clerk's dashboard while customizing it to suit the specific needs of ContentBlocks.
+
+3. **Implementing Custom Node.js Server for Authentication:**
+   Setting up a custom Node.js server to handle authentication on the server-side using Clerk's Node.js API offers several advantages. It allows for additional security measures such as password hashing, token validation, and rate limiting. Most important is offloading authentication tasks from the client-side to the server-side can improve performance and scalability.
+
+4. **Utilizing Custom Database for User Storage:**
+   Leveraging a custom database to store user data while Clerk handles authentication can provide flexibility and control over data management. This approach allows for seamless integration with existing systems, enables customized data schemas, and provides data migration or backups as required.
+
+---
+
+**Thanks for reading me!**
