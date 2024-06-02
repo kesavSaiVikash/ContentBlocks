@@ -6,8 +6,8 @@ import { useNavigate } from "react-router-dom";
 // It checks if the user is signed in, and if not, it redirects to the login page.
 
 const ProtectedRoute = ({ children }) => {
-  const { isSignedIn } = useAuth(); // Use Clerk's useAuth hook to check if the user is signed in
-  const navigate = useNavigate(); // Use React Router's useNavigate hook for navigation
+  const { isSignedIn } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!isSignedIn) {

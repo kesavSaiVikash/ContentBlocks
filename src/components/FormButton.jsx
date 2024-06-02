@@ -1,5 +1,5 @@
-import React from "react"; // Importing React for creating components
-import { Loading } from "../components"; // Importing Loading component to display a loading spinner
+import React from "react";
+import { Loading } from "../components";
 
 // This is a button component used in forms, with dynamic text and loading state handling
 

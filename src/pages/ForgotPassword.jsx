@@ -1,8 +1,8 @@
 import React from "react";
-import { useNavigate } from "react-router-dom"; // Importing useNavigate for navigation
-import { useForm } from "react-hook-form"; // Importing useForm for form handling
-import { useForgotPassword, useLogout } from "../custom_hooks"; // Importing custom hooks for forgot password and logout
-import { ReactComponent as Astrix } from "../assets/astrix.svg"; // Importing an SVG component
+import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { useForgotPassword, useLogout } from "../custom_hooks";
+import { ReactComponent as Astrix } from "../assets/astrix.svg";
 
 import {
   AuthLayout,
@@ -10,10 +10,10 @@ import {
   Modal,
   FormInput,
   FormButton,
-} from "../components"; // Importing required components
+} from "../components";
 
 const ForgotPasswordPage = () => {
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
   const { handleLogout } = useLogout(); // Destructuring handleLogout function from useLogout hook
   const { requestPasswordReset, verifyResetCode, currentUser, setCurrentUser } =
     useForgotPassword(); // Destructuring necessary functions and state from useForgotPassword hook

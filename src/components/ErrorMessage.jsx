@@ -1,4 +1,4 @@
-import React from "react"; // Importing React for creating components
+import React from "react";
 
 // This is a dynamic error message component where the message is passed as a prop
 // This component can be imported and used on any page of the project with a dynamic message prop

@@ -1,8 +1,7 @@
 import React from "react";
-import { useAtom } from "jotai"; // Importing useAtom from jotai for state management
-import { Navbar, Loading } from "../components"; // Importing Navbar and Loading components
-import { currentUserAtom } from "../utils/store"; // Importing currentUserAtom from the store
-
+import { useAtom } from "jotai";
+import { Navbar, Loading } from "../components";
+import { currentUserAtom } from "../utils/store";
 const Home = () => {
   const [currentUser] = useAtom(currentUserAtom); // Accessing the currentUser state using the jotai atom
 

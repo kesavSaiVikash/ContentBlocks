@@ -1,6 +1,6 @@
 import React from "react";
-import { Loading } from "."; // Importing the Loading component
-import { useLogout } from "../custom_hooks"; // Importing the custom hook for logout functionality
+import { Loading } from ".";
+import { useLogout } from "../custom_hooks";
 
 // Navbar component with logo and logout button
 

@@ -8,12 +8,12 @@ import { useErrorHandler } from "../custom_hooks";
 // Custom hook for login functionality.
 
 const useLogin = () => {
-  const navigate = useNavigate(); // For navigation
+  const navigate = useNavigate();
   const { signIn, setActive } = useSignIn(); // Clerk hooks for signing in and setting active session
   const { isLoaded: isSessionLoaded, session } = useSession(); // Clerk hook for session information
   const { isLoaded: isUserLoaded, user } = useUser(); // Clerk hook for user information
-  const [currentUser, setCurrentUser] = useAtom(currentUserAtom); // State management with Jotai
-  const { handleErrors, handleCompletion } = useErrorHandler(); // Custom error handling hook
+  const [currentUser, setCurrentUser] = useAtom(currentUserAtom); // curremtUserAtom jotai state
+  const { handleErrors, handleCompletion } = useErrorHandler(); // global error handler
 
   // Effect to set initial strategy and update user info if session and user data are loaded.
   useEffect(() => {

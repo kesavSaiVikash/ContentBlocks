@@ -7,10 +7,10 @@ import { useAtom } from "jotai";
 // Custom hook for registration functionality.
 
 const useRegister = () => {
-  const navigate = useNavigate(); // For navigation
+  const navigate = useNavigate();
   const { isLoaded, signUp, setActive } = useSignUp(); // Clerk hooks for signing up and setting active session
-  const [currentUser, setCurrentUser] = useAtom(currentUserAtom); // State management with Jotai
-  const { handleErrors, handleCompletion } = useErrorHandler(); // Custom error handling hook
+  const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
+  const { handleErrors, handleCompletion } = useErrorHandler();
 
   // Function to register a new user.
   const registerUser = async (data, strategy) => {
@@ -89,7 +89,7 @@ const useRegister = () => {
         navigate("/"); // Navigate to home after successful verification
       }
     } catch (err) {
-      handleErrors(err);
+      handleErrors(err); // Handle errors
     } finally {
       handleCompletion(); // Finalize
     }

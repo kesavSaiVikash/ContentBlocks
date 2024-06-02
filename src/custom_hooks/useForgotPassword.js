@@ -7,8 +7,8 @@ import { useErrorHandler } from "../custom_hooks";
 
 const useForgotPassword = () => {
   const { signIn } = useSignIn(); // Clerk hook for signing in
-  const [currentUser, setCurrentUser] = useAtom(currentUserAtom); // State management with Jotai
-  const { handleErrors, handleCompletion } = useErrorHandler(); // Custom error handling hook
+  const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
+  const { handleErrors, handleCompletion } = useErrorHandler();
 
   // Function to request password reset.
   const requestPasswordReset = async (email) => {
@@ -71,7 +71,7 @@ const useForgotPassword = () => {
         }));
       }
     } catch (err) {
-      handleErrors(err);
+      handleErrors(err); // Handle errors
     } finally {
       handleCompletion(); // Finalize
     }
