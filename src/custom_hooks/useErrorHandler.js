@@ -5,7 +5,7 @@ import { isClerkAPIResponseError } from "@clerk/clerk-react/errors";
 // Custom hook for handling errors and loading state.
 
 const useErrorHandler = () => {
-  const [, setCurrentUser] = useAtom(currentUserAtom); // State management with Jotai
+  const [, setCurrentUser] = useAtom(currentUserAtom);
 
   // Function to handle errors by setting an appropriate error message in state.
   const handleErrors = (err) => {

@@ -1,13 +1,12 @@
-import React from "react"; // Importing React for creating components
-import { ErrorMessage } from "../components"; // Importing ErrorMessage component to display validation errors
+import React from "react";
+import { ErrorMessage } from "../components";
 
 // This is a form input component with error handling
+
 const FormInput = ({ id, name, type, placeholder, register, errors }) => (
   <div className="input-container">
-    {" "}
     {/* Container for the input field and its error message */}
     <label htmlFor={id} className="input-label">
-      {" "}
       {/* Label for the input field */}
       {placeholder} {/* Use the placeholder text as the label */}
     </label>
@@ -24,7 +23,7 @@ const FormInput = ({ id, name, type, placeholder, register, errors }) => (
           // If the input type is email, add an email pattern validation
           pattern: {
             value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-            message: "Enter a valid email address.", // Custom validation message for invalid email format
+            message: "Enter a valid email address.",
           },
         }),
       })}

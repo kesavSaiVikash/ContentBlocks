@@ -1,10 +1,10 @@
 import React from "react";
-import { useAtom } from "jotai"; // Importing useAtom from jotai for state management
-import { useForm } from "react-hook-form"; // Importing useForm from react-hook-form for form handling
-import { useRegister } from "../custom_hooks"; // Importing custom register hook
-import { useNavigate } from "react-router-dom"; // Importing useNavigate for navigation
-import { currentUserAtom } from "../utils/store"; // Importing atom for current user state
-import { ReactComponent as Astrix } from "../assets/astrix.svg"; // Importing an SVG component
+import { useAtom } from "jotai";
+import { useForm } from "react-hook-form";
+import { useRegister } from "../custom_hooks";
+import { useNavigate } from "react-router-dom";
+import { currentUserAtom } from "../utils/store";
+import { ReactComponent as Astrix } from "../assets/astrix.svg";
 
 import {
   AuthLayout,
@@ -12,11 +12,11 @@ import {
   FormButton,
   FormInput,
   Modal,
-} from "../components"; // Importing required components
+} from "../components";
 
 const RegisterPage = () => {
-  const navigate = useNavigate(); // Hook for navigation
-  const [currentUser, setCurrentUser] = useAtom(currentUserAtom); // State management for current user
+  const navigate = useNavigate();
+  const [currentUser, setCurrentUser] = useAtom(currentUserAtom);
   const { registerUser, verifyEmail } = useRegister(); // Destructuring register and verifyEmail functions from useRegister hook
   const {
     register,

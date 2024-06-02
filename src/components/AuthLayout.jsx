@@ -1,5 +1,5 @@
 import React from "react";
-import bgImage from "../assets/bgImage.png"; // Import background image for the auth layout
+import bgImage from "../assets/bgImage.png";
 
 // This is the AuthLayout component, which will be used for all the authentication pages/screens
 const AuthLayout = ({ children }) => {

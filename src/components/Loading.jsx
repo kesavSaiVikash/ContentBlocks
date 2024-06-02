@@ -5,7 +5,7 @@ import React from "react";
 const Loading = () => {
   return (
     <div className="loading-overlay">
-      {/* Spinner for visual indication of loading */}
+      {/* Spinner */}
       <div className="loading-spinner"></div>
       {/* Loading text displayed below the spinner */}
       <p className="loading-text">Loading...</p>

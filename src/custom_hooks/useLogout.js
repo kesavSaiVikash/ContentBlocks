@@ -8,9 +8,9 @@ import { useErrorHandler } from "../custom_hooks";
 
 const useLogout = () => {
   const { signOut } = useClerk(); // Clerk hook for signing out
-  const navigate = useNavigate(); // React Router hook for navigation
-  const [, setCurrentUser] = useAtom(currentUserAtom); // State management with Jotai
-  const { handleErrors, handleCompletion } = useErrorHandler(); // Custom error handling hook
+  const navigate = useNavigate();
+  const [, setCurrentUser] = useAtom(currentUserAtom);
+  const { handleErrors, handleCompletion } = useErrorHandler();
 
   // Function to handle user logout.
   const handleLogout = async () => {

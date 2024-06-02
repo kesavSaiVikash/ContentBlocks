@@ -1,6 +1,6 @@
 import React from "react";
-import { useForm } from "react-hook-form"; // Importing useForm hook from react-hook-form for form handling
-import { useLogin } from "../custom_hooks"; // Importing custom login hook
+import { useForm } from "react-hook-form";
+import { useLogin } from "../custom_hooks";
 import {
   Loading,
   AuthLayout,
@@ -8,7 +8,7 @@ import {
   FormInput,
   FormButton,
   Modal,
-} from "../components"; // Importing required components
+} from "../components";
 
 const Login = () => {
   // Destructuring login, setCurrentUser, and currentUser from the useLogin custom hook
