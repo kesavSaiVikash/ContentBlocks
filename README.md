@@ -35,6 +35,7 @@ This project is a React-based web application using Clerk for authentication. It
    - pages: Contains the main pages of the application (e.g., Login, Register, Home, ForgotPassword).
    - components: Reusable components used across different pages (e.g., Navbar, Loading, AuthLayout, ErrorMessage, ErrorPopup, FormInput, FormButton, ProtectedRoute).
    - custom_hooks: Custom hooks to encapsulate and manage logic for authentication and other features (e.g., useLogin, useRegister, useForgotPassword, useLogout, useErrorHandler).
+   - routes: Contains all the app routes which is imported in app js.
    - utils: Utilities such as global state management using Jotai.
    - assets: Contains static assets like images and icons.
 
