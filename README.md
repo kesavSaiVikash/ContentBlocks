@@ -94,11 +94,10 @@ This project is a React-based web application using Clerk for authentication. It
 
 5. Routes:
 
-- Component that holds all the routes including protected and public routes, this component is imported on App.js
-- This component is basically for configuring routes and wrapping them in necessary providers.
+   - Component that holds all the routes including protected and public routes, this component is imported on App.js
+   - This component is basically for configuring routes and wrapping them in necessary providers.
 
 **Conclusion:**
 
 This project demonstrates a modular and scalable approach to building a React application with user authentication.
-By leveraging Clerk for authentication, Jotai for state management, and React Router for navigation, the application is well-structured and easy to maintain.
-The use of custom hooks encapsulates business logic, promoting reusability and separation of concerns.
+By leveraging Clerk for authentication, Jotai for state management, and React Router for navigation, the application is well-structured and easy to maintain. The use of custom hooks encapsulates business logic, promoting reusability and separation of concerns.
