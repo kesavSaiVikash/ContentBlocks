@@ -1,24 +1,86 @@
-// Import bcrypt for secure password hashing.
-import bcrypt from "bcryptjs";
+// This js file is just a simulation/demostration of password hashing technique when we have a custom server/backend/api
+import { compare, genSalt, hash } from "bcryptjs";
 
-/**
- * Hashes a plain text password using bcrypt.
- *
- * @param {string} password - The plain text password to hash.
- * @returns {string} - The resulting hashed password.
- */
-
-const hashPassword = (password) => {
-  // Generate a salt with a cost factor of 10, enhancing security.
-  const salt = bcrypt.genSaltSync(10);
-
-  // Hash the password using the generated salt.
-  return bcrypt.hashSync(password, salt);
+// Simulated database
+const database = {
+  users: [],
 };
 
-// Example usage:
-const plainPassword = "yourPassword123";
-const hashedPassword = hashPassword(plainPassword);
+// Simulated backend APIs
+const backendAPI = {
+  register: async (username, email, hashedPassword) => {
+    // Simulating registration API call to the backend
+    console.log(
+      `Registering user ${username} with email ${email} and hashed password ${hashedPassword}`
+    );
+    database.users.push({ username, email, hashedPassword }); // Simulating saving user to the database
+    return true; // Simulating successful registration
+  },
 
-// Output the hashed password for demonstration.
-console.log("Hashed Password:", hashedPassword);
+  login: async (email, password) => {
+    // Simulating login API call to the backend
+    console.log(`User with email ${email} attempting to log in...`);
+    const user = database.users.find((user) => user.email === email);
+    if (user) {
+      const isPasswordCorrect = await compare(password, user.hashedPassword);
+      if (isPasswordCorrect) {
+        console.log(`User with email ${email} logged in successfully.`);
+        return true;
+      } else {
+        console.log(`Login failed. Incorrect email or password.`);
+        return false;
+      }
+    } else {
+      console.log(`Login failed. User with email ${email} not found.`);
+      return false;
+    }
+  },
+};
+
+// Function to hash the password on the frontend
+const hashPassword = async (password) => {
+  const saltRounds = 10;
+  const salt = await genSalt(saltRounds);
+  const hashedPassword = await hash(password, salt);
+  return hashedPassword;
+};
+
+// Frontend simulation function of user registration
+const registerUser = async (username, email, password) => {
+  try {
+    const hashedPassword = await hashPassword(password);
+    const success = await backendAPI.register(username, email, hashedPassword); // Call to simulated backend register api
+    if (success) {
+      console.log(
+        `User ${username} with email ${email} registered successfully.`
+      );
+    } else {
+      console.log(`Registration failed.`);
+    }
+  } catch (error) {
+    console.error(`Error during registration: ${error.message}`);
+  }
+};
+
+// Frontend simulation function of user login
+const loginUser = async (email, password) => {
+  try {
+    const success = await backendAPI.login(email, password); // Call to simulated backend login api
+    if (success) {
+      console.log(`User with email ${email} logged in successfully.`);
+    } else {
+      console.log(`Login failed.`);
+    }
+  } catch (error) {
+    console.error(`Error during login: ${error.message}`);
+  }
+};
+
+// Example usage
+(async () => {
+  // Simulated frontend registration call
+  await registerUser("Kesav_Bollam", "test@test.com", "password123");
+
+  // Simulated frontend login call
+  await loginUser("test@test.com", "password123");
+})();
