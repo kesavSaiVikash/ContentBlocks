@@ -27,7 +27,8 @@ This project is a React-based web application using Clerk for authentication. It
 **Approach:**
 
 1. Project Structure:
-   The project is organized into the following directories:
+
+   - The project is organized into the following directories:
 
    - pages: Contains the main pages of the application (e.g., Login, Register, Home, ForgotPassword).
    - components: Reusable components used across different pages (e.g., Navbar, Loading, AuthLayout, ErrorMessage, ErrorPopup, FormInput, FormButton, ProtectedRoute).
@@ -82,14 +83,19 @@ This project is a React-based web application using Clerk for authentication. It
 
    **Note:**
 
-   - passwordHashingDemo: A demonstration of how to do password hashing if we have a custom server between frontend and clerk.
-   - This file in custom_hooks/passwordHashingDemo.js is only for demonstration purposes and have not been used anywhere in the project.
+   - passwordHashingDemo: A demonstration of how to do password hashing if we have a custom server and custom db where we can store the user auth data.
+   - This file in custom_hooks/passwordHashingDemo.js is for password hashing demonstration purposes and have not been used anywhere in the project.
 
 4. Configuration Files:
 
-   - App.js: Main application component configuring routes and wrapping them in necessary providers.
+   - App.js: Main application component which returns all the app routes imported from src/routes.
    - index.js: Entry point rendering the app with the ClerkProvider.
    - .env.local: Local environment variables for configuring Clerk and authentication strategies.
+
+5. Routes:
+
+- Component that holds all the routes including protected and public routes, this component is imported on App.js
+- This component is basically for configuring routes and wrapping them in necessary providers.
 
 **Conclusion:**
 
