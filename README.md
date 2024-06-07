@@ -47,6 +47,10 @@ This project is a React-based web application using Clerk for authentication. It
 
    Clerk is used for managing user authentication. The application supports various authentication strategies (email code, email link, password reset) configured through environment variables. Custom hooks (useLogin, useRegister, useForgotPassword, useLogout) encapsulate the logic for these authentication flows, ensuring a clean and maintainable approach.
 
+   **Note**
+
+   - When you run the project locally you will be connected to my development ContentBlocks app that I created on my free Clerk account (In .env.local you will see I am using my clerk credentials, so any user creates a account will be saved to my personal dev clerk's app called ContentBlocks)
+
 4. Routing:
 
    React Router is used for client-side routing. The ProtectedRoute component ensures that routes requiring authentication are protected and redirect unauthenticated users to the login page.
@@ -90,6 +94,7 @@ This project is a React-based web application using Clerk for authentication. It
 
    - passwordHashingDemo: A demonstration of how to do password hashing if we have a custom server and custom db where we can store the user auth data.
    - This file in custom_hooks/passwordHashingDemo.js is for password hashing demonstration purposes and have not been used anywhere in the project.
+   - Password hashing demo, if you want to test on your side locally you can just copy and paste the script in any free online JS compiler to see logging of the entire password hashing simulation.
 
 4. Configuration Files:
 
